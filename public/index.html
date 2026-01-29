@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Brunel Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #0a1628;
+      --ink-light: #1a2d4a;
+      --ink-mid: #2a3f5f;
+      --gold: #c9a227;
+      --gold-light: #e8c547;
+      --gold-faint: rgba(201, 162, 39, 0.08);
+      --copper: #b87333;
+      --cream: #faf8f5;
+      --cream-dark: #f0ebe3;
+      --text: #2a3441;
+      --text-light: #5a6677;
+      --text-faint: #8a95a5;
+      --success: #2d8a56;
+      --danger: #c0392b;
+      --radius: 8px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-weight: 600;
+    }
+
+    /* ─── Layout ─────────────────────────────────────────── */
+
+    .container {
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* ─── Header ─────────────────────────────────────────── */
+
+    header {
+      padding: 1.25rem 0;
+      border-bottom: 1px solid rgba(10, 22, 40, 0.08);
+      background: rgba(250, 248, 245, 0.95);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+
+    .logo span { color: var(--gold); }
+
+    .header-status {
+      font-size: 0.8rem;
+      color: var(--text-faint);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* ─── Screens ────────────────────────────────────────── */
+
+    .screen {
+      display: none;
+      flex: 1;
+    }
+
+    .screen.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── Welcome Screen ─────────────────────────────────── */
+
+    .welcome {
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 60px);
+      padding: 2rem 0;
+    }
+
+    .welcome-card {
+      max-width: 560px;
+      width: 100%;
+      text-align: center;
+      animation: fadeUp 0.5s ease-out;
+    }
+
+    .welcome-card h1 {
+      font-size: 2.5rem;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.03em;
+    }
+
+    .welcome-card h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .welcome-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-light);
+      font-weight: 300;
+      margin-bottom: 2.5rem;
+    }
+
+    .welcome-body {
+      background: white;
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      box-shadow: 0 8px 40px rgba(10, 22, 40, 0.06);
+      text-align: left;
+    }
+
+    .welcome-body p {
+      color: var(--text-light);
+      margin-bottom: 1rem;
+      font-size: 1.05rem;
+    }
+
+    .welcome-body p:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .welcome-note {
+      background: var(--gold-faint);
+      border-left: 3px solid var(--gold);
+      padding: 1rem 1.25rem;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .welcome-privacy {
+      font-size: 0.9rem !important;
+      color: var(--text-faint) !important;
+      font-style: italic;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--cream);
+      width: 100%;
+      margin-top: 2rem;
+    }
+
+    .btn-primary:hover {
+      background: var(--ink-light);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(10, 22, 40, 0.2);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    /* ─── Interview Screen ───────────────────────────────── */
+
+    .interview {
+      flex: 1;
+      min-height: calc(100vh - 60px);
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 2rem 0;
+    }
+
+    .message {
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.3s ease-out;
+    }
+
+    .message-bubble {
+      max-width: 85%;
+      padding: 1rem 1.25rem;
+      border-radius: 16px;
+      font-size: 1rem;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .message.assistant .message-bubble {
+      background: white;
+      color: var(--text);
+      border: 1px solid rgba(10, 22, 40, 0.08);
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 2px 8px rgba(10, 22, 40, 0.04);
+    }
+
+    .message.user {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .message.user .message-bubble {
+      background: var(--ink);
+      color: var(--cream);
+      border-bottom-right-radius: 4px;
+    }
+
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 1.25rem;
+      background: white;
+      border: 1px solid rgba(10, 22, 40, 0.08);
+      border-radius: 16px;
+      border-bottom-left-radius: 4px;
+      max-width: 120px;
+      box-shadow: 0 2px 8px rgba(10, 22, 40, 0.04);
+      animation: fadeUp 0.3s ease-out;
+    }
+
+    .typing-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--text-faint);
+      animation: typingBounce 1.4s ease-in-out infinite;
+    }
+
+    .typing-dot:nth-child(2) { animation-delay: 0.15s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes typingBounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-4px); opacity: 1; }
+    }
+
+    /* ─── Input Area ─────────────────────────────────────── */
+
+    .input-area {
+      padding: 1rem 0 1.5rem;
+      border-top: 1px solid rgba(10, 22, 40, 0.06);
+      background: var(--cream);
+      position: sticky;
+      bottom: 0;
+    }
+
+    .input-wrapper {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-end;
+    }
+
+    .input-field {
+      flex: 1;
+      padding: 0.9rem 1.15rem;
+      border: 2px solid rgba(10, 22, 40, 0.1);
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 1rem;
+      color: var(--text);
+      background: white;
+      resize: none;
+      outline: none;
+      transition: border-color 0.2s;
+      min-height: 48px;
+      max-height: 150px;
+      line-height: 1.5;
+    }
+
+    .input-field:focus {
+      border-color: var(--gold);
+    }
+
+    .input-field::placeholder {
+      color: var(--text-faint);
+    }
+
+    .send-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius);
+      background: var(--ink);
+      color: var(--cream);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .send-btn:hover:not(:disabled) {
+      background: var(--ink-light);
+      transform: translateY(-1px);
+    }
+
+    .send-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .send-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .input-hint {
+      font-size: 0.78rem;
+      color: var(--text-faint);
+      margin-top: 0.5rem;
+    }
+
+    /* ─── Report Screen ──────────────────────────────────── */
+
+    .report {
+      padding: 2rem 0 4rem;
+    }
+
+    .report-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.4s ease-out;
+    }
+
+    .report-header h1 {
+      font-size: 2rem;
+      color: var(--ink);
+      margin-bottom: 0.35rem;
+    }
+
+    .report-header p {
+      color: var(--text-faint);
+      font-size: 0.95rem;
+    }
+
+    .report-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 2px 12px rgba(10, 22, 40, 0.04);
+      border: 1px solid rgba(10, 22, 40, 0.06);
+      animation: fadeUp 0.4s ease-out;
+    }
+
+    .report-card h3 {
+      font-size: 1.1rem;
+      color: var(--ink);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .report-card h3 .icon {
+      font-size: 1.2rem;
+    }
+
+    .report-card p {
+      color: var(--text-light);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .severity-bar {
+      height: 6px;
+      background: rgba(10, 22, 40, 0.06);
+      border-radius: 3px;
+      margin-top: 0.75rem;
+      overflow: hidden;
+    }
+
+    .severity-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.8s ease-out;
+    }
+
+    .constraints-list {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .constraints-list li {
+      background: var(--gold-faint);
+      color: var(--text);
+      padding: 0.35rem 0.85rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      border: 1px solid rgba(201, 162, 39, 0.15);
+    }
+
+    /* ─── Pathways ───────────────────────────────────────── */
+
+    .pathways-grid {
+      display: grid;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .pathway {
+      background: var(--cream);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      border: 1px solid rgba(10, 22, 40, 0.06);
+    }
+
+    .pathway-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .pathway h4 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--ink);
+    }
+
+    .pathway-meta {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .pathway-tag {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .tag-effort-low { background: #e8f5e9; color: #2e7d32; }
+    .tag-effort-medium { background: #fff3e0; color: #e65100; }
+    .tag-effort-high { background: #fce4ec; color: #c62828; }
+    .tag-impact-low { background: #e3f2fd; color: #1565c0; }
+    .tag-impact-medium { background: #e8eaf6; color: #283593; }
+    .tag-impact-high { background: #ede7f6; color: #4527a0; }
+    .tag-impact-variable { background: #f3e5f5; color: #6a1b9a; }
+
+    .pathway p {
+      color: var(--text-light);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .pathway-timeframe {
+      font-size: 0.85rem;
+      color: var(--text-faint);
+      margin-top: 0.5rem;
+      font-weight: 500;
+    }
+
+    /* ─── Actions ────────────────────────────────────────── */
+
+    .actions-list {
+      list-style: none;
+      counter-reset: actions;
+    }
+
+    .actions-list li {
+      counter-increment: actions;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(10, 22, 40, 0.04);
+      font-size: 1rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .actions-list li:last-child {
+      border-bottom: none;
+    }
+
+    .actions-list li::before {
+      content: counter(actions);
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--ink);
+      color: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-top: 0.1rem;
+    }
+
+    /* ─── Tools ──────────────────────────────────────────── */
+
+    .tools-grid {
+      display: grid;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .tool-card {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: var(--cream);
+      border-radius: var(--radius);
+      border: 1px solid rgba(10, 22, 40, 0.06);
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s;
+    }
+
+    .tool-card:hover {
+      border-color: var(--gold);
+      transform: translateX(3px);
+      box-shadow: 0 2px 8px rgba(10, 22, 40, 0.06);
+    }
+
+    .tool-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius);
+      background: var(--gold-faint);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1.1rem;
+    }
+
+    .tool-info h4 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--ink);
+      margin-bottom: 0.15rem;
+    }
+
+    .tool-info p {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      line-height: 1.4;
+    }
+
+    .tool-category {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--gold);
+      font-weight: 700;
+      margin-top: 0.25rem;
+    }
+
+    /* ─── Pattern Notice ─────────────────────────────────── */
+
+    .pattern-notice {
+      background: linear-gradient(135deg, var(--ink), var(--ink-light));
+      color: var(--cream);
+      padding: 1.5rem 2rem;
+      border-radius: var(--radius);
+      margin-top: 0.5rem;
+    }
+
+    .pattern-notice h4 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 700;
+      color: var(--gold-light);
+      margin-bottom: 0.35rem;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .pattern-notice p {
+      color: rgba(250, 248, 245, 0.85);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* ─── Report Footer ──────────────────────────────────── */
+
+    .report-footer {
+      text-align: center;
+      padding: 2.5rem 0;
+      border-top: 1px solid rgba(10, 22, 40, 0.06);
+      margin-top: 2rem;
+      animation: fadeUp 0.4s ease-out;
+    }
+
+    .report-footer p {
+      color: var(--text-faint);
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--ink);
+      border: 2px solid rgba(10, 22, 40, 0.15);
+      padding: 0.75rem 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--ink);
+      background: rgba(10, 22, 40, 0.03);
+    }
+
+    /* ─── Loading Screen ─────────────────────────────────── */
+
+    .loading {
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 60px);
+      text-align: center;
+    }
+
+    .loading-content {
+      animation: fadeUp 0.4s ease-out;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 3px solid rgba(10, 22, 40, 0.08);
+      border-top-color: var(--ink);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 1.5rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading h2 {
+      font-size: 1.35rem;
+      color: var(--ink);
+      margin-bottom: 0.35rem;
+    }
+
+    .loading p {
+      color: var(--text-faint);
+      font-size: 0.95rem;
+    }
+
+    /* ─── Error Screen ───────────────────────────────────── */
+
+    .error-screen {
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 60px);
+      text-align: center;
+    }
+
+    .error-content {
+      animation: fadeUp 0.4s ease-out;
+      max-width: 400px;
+    }
+
+    .error-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .error-content h2 {
+      font-size: 1.35rem;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+    }
+
+    .error-content p {
+      color: var(--text-light);
+      margin-bottom: 1.5rem;
+    }
+
+    /* ─── Animations ─────────────────────────────────────── */
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── Responsive ─────────────────────────────────────── */
+
+    @media (max-width: 640px) {
+      .container { padding: 0 1rem; }
+      .welcome-card h1 { font-size: 2rem; }
+      .welcome-body { padding: 1.5rem; }
+      .report-card { padding: 1.5rem; }
+      .message-bubble { max-width: 92%; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <div class="logo">The Brunel <span>Engine</span></div>
+      <div class="header-status" id="headerStatus">
+        <div class="status-dot"></div>
+        <span>Ready</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Welcome Screen -->
+  <div class="screen welcome active" id="screen-welcome">
+    <div class="container">
+      <div class="welcome-card">
+        <h1>Turn Frustrations<br>Into <em>Insight</em></h1>
+        <p class="welcome-subtitle">A structured conversation that generates a private action plan.</p>
+
+        <div class="welcome-body">
+          <p>Tell me about a problem, frustration, or situation you can't seem to crack. I'll ask good questions, then generate an analysis with concrete paths forward.</p>
+
+          <div class="welcome-note">
+            <strong>This works best when you're specific.</strong> The more detail you give, the sharper the output. Venting is valid, but acting requires different advice than exploring.
+          </div>
+
+          <p class="welcome-privacy">Your responses generate a private report. Only you see it. Nothing is stored.</p>
+
+          <button class="btn btn-primary" id="startBtn">Begin the Interview</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interview Screen -->
+  <div class="screen interview" id="screen-interview">
+    <div class="container" style="display:flex; flex-direction:column; flex:1; min-height:calc(100vh - 60px);">
+      <div class="messages" id="messages"></div>
+      <div class="input-area">
+        <div class="input-wrapper">
+          <textarea
+            class="input-field"
+            id="inputField"
+            placeholder="Type your response..."
+            rows="1"
+          ></textarea>
+          <button class="send-btn" id="sendBtn" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+        <div class="input-hint">Press Enter to send, Shift+Enter for new line</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Screen -->
+  <div class="screen loading" id="screen-loading">
+    <div class="loading-content">
+      <div class="spinner"></div>
+      <h2>Generating your report</h2>
+      <p>Analysing your responses and building pathways...</p>
+    </div>
+  </div>
+
+  <!-- Report Screen -->
+  <div class="screen report" id="screen-report">
+    <div class="container">
+      <div class="report-header">
+        <h1>Your Report</h1>
+        <p>Private. Only you see this.</p>
+      </div>
+      <div id="reportContent"></div>
+      <div class="report-footer">
+        <p>Found this useful?</p>
+        <button class="btn btn-secondary" id="restartBtn">Start a new session</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Screen -->
+  <div class="screen error-screen" id="screen-error">
+    <div class="error-content">
+      <div class="error-icon">!</div>
+      <h2>Something went wrong</h2>
+      <p id="errorMessage">We couldn't generate your report. This usually means the API key isn't configured.</p>
+      <button class="btn btn-primary" id="retryBtn" style="max-width:300px; margin:0 auto;">Try Again</button>
+    </div>
+  </div>
+
+  <script>
+    // ─── State ──────────────────────────────────────────────
+    const state = {
+      messages: [],  // { role: 'user'|'assistant', content: string }
+      sending: false,
+      interviewComplete: false
+    };
+
+    // ─── DOM refs ───────────────────────────────────────────
+    const $ = id => document.getElementById(id);
+    const screens = {
+      welcome: $('screen-welcome'),
+      interview: $('screen-interview'),
+      loading: $('screen-loading'),
+      report: $('screen-report'),
+      error: $('screen-error')
+    };
+    const messagesEl = $('messages');
+    const inputField = $('inputField');
+    const sendBtn = $('sendBtn');
+    const headerStatus = $('headerStatus');
+
+    // ─── Navigation ─────────────────────────────────────────
+    function showScreen(name) {
+      Object.values(screens).forEach(s => s.classList.remove('active'));
+      screens[name].classList.add('active');
+
+      if (name === 'interview') {
+        headerStatus.innerHTML = '<div class="status-dot"></div><span>Interview in progress</span>';
+        setTimeout(() => inputField.focus(), 100);
+      } else if (name === 'loading') {
+        headerStatus.innerHTML = '<div class="spinner" style="width:16px;height:16px;border-width:2px;margin:0;"></div><span>Analysing...</span>';
+      } else if (name === 'report') {
+        headerStatus.innerHTML = '<span style="color:var(--success);">Report ready</span>';
+      } else {
+        headerStatus.innerHTML = '<div class="status-dot"></div><span>Ready</span>';
+      }
+    }
+
+    // ─── Messages ───────────────────────────────────────────
+    function addMessage(role, content) {
+      state.messages.push({ role, content });
+      renderMessage(role, content);
+    }
+
+    function renderMessage(role, content) {
+      const div = document.createElement('div');
+      div.className = `message ${role}`;
+      div.innerHTML = `<div class="message-bubble">${escapeHtml(content)}</div>`;
+      messagesEl.appendChild(div);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function showTyping() {
+      const div = document.createElement('div');
+      div.className = 'message assistant';
+      div.id = 'typing';
+      div.innerHTML = `<div class="typing-indicator">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>`;
+      messagesEl.appendChild(div);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function hideTyping() {
+      const el = $('typing');
+      if (el) el.remove();
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // ─── Auto-resize textarea ───────────────────────────────
+    inputField.addEventListener('input', () => {
+      inputField.style.height = 'auto';
+      inputField.style.height = Math.min(inputField.scrollHeight, 150) + 'px';
+      sendBtn.disabled = !inputField.value.trim() || state.sending;
+    });
+
+    // ─── Keyboard handling ──────────────────────────────────
+    inputField.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        if (inputField.value.trim() && !state.sending) {
+          sendMessage();
+        }
+      }
+    });
+
+    sendBtn.addEventListener('click', () => {
+      if (inputField.value.trim() && !state.sending) {
+        sendMessage();
+      }
+    });
+
+    // ─── Send message ───────────────────────────────────────
+    async function sendMessage() {
+      const text = inputField.value.trim();
+      if (!text || state.sending) return;
+
+      state.sending = true;
+      sendBtn.disabled = true;
+      inputField.value = '';
+      inputField.style.height = 'auto';
+
+      addMessage('user', text);
+      showTyping();
+
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: state.messages })
+        });
+
+        if (!res.ok) throw new Error('API error');
+
+        const data = await res.json();
+        hideTyping();
+
+        // Check if interview is complete
+        if (data.response.includes('[INTERVIEW_COMPLETE]')) {
+          state.interviewComplete = true;
+          const cleanResponse = data.response.replace('[INTERVIEW_COMPLETE]', '').trim();
+          if (cleanResponse) {
+            addMessage('assistant', cleanResponse);
+          }
+          // Automatically trigger report generation
+          setTimeout(generateReport, 800);
+        } else {
+          addMessage('assistant', data.response);
+        }
+      } catch (err) {
+        hideTyping();
+        addMessage('assistant', "Sorry, I'm having trouble connecting. Please check that the server is running and the API key is configured.");
+      }
+
+      state.sending = false;
+      sendBtn.disabled = !inputField.value.trim();
+      inputField.focus();
+    }
+
+    // ─── Generate Report ────────────────────────────────────
+    async function generateReport() {
+      showScreen('loading');
+
+      try {
+        const res = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ transcript: state.messages })
+        });
+
+        if (!res.ok) throw new Error('Analysis failed');
+
+        const report = await res.json();
+        renderReport(report);
+        showScreen('report');
+      } catch (err) {
+        $('errorMessage').textContent = err.message || 'Failed to generate report. Check the server.';
+        showScreen('error');
+      }
+    }
+
+    // ─── Render Report ──────────────────────────────────────
+    function renderReport(r) {
+      const content = $('reportContent');
+
+      // Severity colour
+      const sevColor = r.severity >= 7 ? '#c0392b' : r.severity >= 4 ? '#e67e22' : '#27ae60';
+      const sevLabel = r.severity >= 7 ? 'High severity' : r.severity >= 4 ? 'Moderate' : 'Low severity';
+
+      // Commitment label
+      const commitLabels = {
+        exploring: 'Exploring the issue',
+        considering: 'Actively considering options',
+        ready_to_act: 'Ready to take action'
+      };
+
+      // Category icons
+      const catIcons = {
+        research: '&#x1F50D;', building: '&#x1F6E0;', legal: '&#x2696;',
+        financial: '&#x1F4B7;', community: '&#x1F91D;', learning: '&#x1F4DA;'
+      };
+
+      let html = '';
+
+      // Summary
+      html += `
+        <div class="report-card" style="animation-delay:0.1s">
+          <h3><span class="icon">&#x1F4CB;</span> Summary</h3>
+          <p>${escapeHtml(r.summary)}</p>
+          <div style="display:flex; gap:1rem; margin-top:1rem; flex-wrap:wrap;">
+            <span style="font-size:0.85rem; color:${sevColor}; font-weight:600;">${sevLabel} (${r.severity}/10)</span>
+            <span style="font-size:0.85rem; color:var(--text-faint);">${commitLabels[r.commitment] || r.commitment}</span>
+          </div>
+          <div class="severity-bar">
+            <div class="severity-fill" style="width:${r.severity * 10}%; background:${sevColor};"></div>
+          </div>
+        </div>`;
+
+      // Core Issue
+      html += `
+        <div class="report-card" style="animation-delay:0.2s">
+          <h3><span class="icon">&#x1F3AF;</span> Core Issue</h3>
+          <p>${escapeHtml(r.core_issue)}</p>
+        </div>`;
+
+      // Constraints
+      if (r.constraints && r.constraints.length > 0) {
+        html += `
+          <div class="report-card" style="animation-delay:0.3s">
+            <h3><span class="icon">&#x1F512;</span> Constraints</h3>
+            <ul class="constraints-list">
+              ${r.constraints.map(c => `<li>${escapeHtml(c)}</li>`).join('')}
+            </ul>
+          </div>`;
+      }
+
+      // Pathways
+      if (r.pathways && r.pathways.length > 0) {
+        html += `
+          <div class="report-card" style="animation-delay:0.4s">
+            <h3><span class="icon">&#x1F6A4;</span> Pathways Forward</h3>
+            <div class="pathways-grid">
+              ${r.pathways.map(p => `
+                <div class="pathway">
+                  <div class="pathway-header">
+                    <h4>${escapeHtml(p.name)}</h4>
+                    <div class="pathway-meta">
+                      <span class="pathway-tag tag-effort-${p.effort}">Effort: ${p.effort}</span>
+                      <span class="pathway-tag tag-impact-${p.impact}">Impact: ${p.impact}</span>
+                    </div>
+                  </div>
+                  <p>${escapeHtml(p.description)}</p>
+                  <div class="pathway-timeframe">${escapeHtml(p.timeframe)}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>`;
+      }
+
+      // Next Actions
+      if (r.next_actions && r.next_actions.length > 0) {
+        html += `
+          <div class="report-card" style="animation-delay:0.5s">
+            <h3><span class="icon">&#x26A1;</span> Next Actions</h3>
+            <ol class="actions-list">
+              ${r.next_actions.map(a => `<li>${escapeHtml(a)}</li>`).join('')}
+            </ol>
+          </div>`;
+      }
+
+      // Tools
+      if (r.tools && r.tools.length > 0) {
+        html += `
+          <div class="report-card" style="animation-delay:0.6s">
+            <h3><span class="icon">&#x1F9F0;</span> Tools & Resources</h3>
+            <div class="tools-grid">
+              ${r.tools.map(t => `
+                <a class="tool-card" href="${escapeHtml(t.url || '#')}" target="_blank" rel="noopener">
+                  <div class="tool-icon">${catIcons[t.category] || '&#x1F517;'}</div>
+                  <div class="tool-info">
+                    <h4>${escapeHtml(t.name)}</h4>
+                    <p>${escapeHtml(t.description)}</p>
+                    <div class="tool-category">${escapeHtml(t.category || '')}</div>
+                  </div>
+                </a>
+              `).join('')}
+            </div>
+          </div>`;
+      }
+
+      // Pattern notice
+      if (r.pattern) {
+        html += `
+          <div class="report-card" style="animation-delay:0.7s; padding:0; border:none; box-shadow:none;">
+            <div class="pattern-notice">
+              <h4>Pattern Detected</h4>
+              <p>${escapeHtml(r.pattern)}</p>
+            </div>
+          </div>`;
+      }
+
+      content.innerHTML = html;
+    }
+
+    // ─── Start Interview ────────────────────────────────────
+    $('startBtn').addEventListener('click', async () => {
+      showScreen('interview');
+
+      // Send initial message to get the first question
+      state.sending = true;
+      showTyping();
+
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages: [{ role: 'user', content: 'I\'d like to start the interview. Please ask me your first question.' }]
+          })
+        });
+
+        if (!res.ok) throw new Error('Failed to start');
+
+        const data = await res.json();
+        hideTyping();
+
+        // Store the hidden "start" message and the response
+        state.messages.push({ role: 'user', content: 'I\'d like to start the interview. Please ask me your first question.' });
+        state.messages.push({ role: 'assistant', content: data.response });
+
+        // Only show the assistant's response
+        renderMessage('assistant', data.response);
+      } catch (err) {
+        hideTyping();
+        renderMessage('assistant', "I'm having trouble starting up. Please make sure the server is running with a valid API key, then refresh the page.");
+      }
+
+      state.sending = false;
+      inputField.focus();
+    });
+
+    // ─── Restart ────────────────────────────────────────────
+    $('restartBtn').addEventListener('click', () => {
+      state.messages = [];
+      state.sending = false;
+      state.interviewComplete = false;
+      messagesEl.innerHTML = '';
+      inputField.value = '';
+      $('reportContent').innerHTML = '';
+      showScreen('welcome');
+    });
+
+    // ─── Retry ──────────────────────────────────────────────
+    $('retryBtn').addEventListener('click', () => {
+      if (state.interviewComplete) {
+        generateReport();
+      } else {
+        state.messages = [];
+        state.sending = false;
+        state.interviewComplete = false;
+        messagesEl.innerHTML = '';
+        showScreen('welcome');
+      }
+    });
+  </script>
+</body>
+</html>

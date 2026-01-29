@@ -1,0 +1,11 @@
+{
+  "rewrites": [
+    { "source": "/api/chat", "destination": "/api/chat" },
+    { "source": "/api/analyze", "destination": "/api/analyze" },
+    { "source": "/api/health", "destination": "/api/health" }
+  ],
+  "functions": {
+    "api/chat.js": { "maxDuration": 30 },
+    "api/analyze.js": { "maxDuration": 60 }
+  }
+}
