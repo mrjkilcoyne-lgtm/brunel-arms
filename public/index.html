@@ -43,11 +43,20 @@
       font-weight: 600;
     }
 
+    a { color: var(--ink); }
+
     /* ─── Layout ─────────────────────────────────────────── */
 
     .container {
       width: 100%;
       max-width: 720px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .container-wide {
+      width: 100%;
+      max-width: 860px;
       margin: 0 auto;
       padding: 0 1.5rem;
     }
@@ -68,6 +77,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
     }
 
     .logo {
@@ -76,9 +88,41 @@
       font-weight: 700;
       color: var(--ink);
       letter-spacing: -0.02em;
+      text-decoration: none;
+      cursor: pointer;
     }
 
     .logo span { color: var(--gold); }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .nav-link {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-light);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover { color: var(--ink); }
+    .nav-link.active-link { color: var(--ink); font-weight: 600; }
+
+    .nav-cta {
+      background: var(--ink);
+      color: var(--cream) !important;
+      padding: 0.5rem 1.25rem;
+      border-radius: var(--radius);
+      font-weight: 600;
+    }
+
+    .nav-cta:hover {
+      background: var(--ink-light);
+      color: var(--cream);
+    }
 
     .header-status {
       font-size: 0.8rem;
@@ -162,9 +206,7 @@
       font-size: 1.05rem;
     }
 
-    .welcome-body p:last-of-type {
-      margin-bottom: 0;
-    }
+    .welcome-body p:last-of-type { margin-bottom: 0; }
 
     .welcome-note {
       background: var(--gold-faint);
@@ -181,6 +223,21 @@
       color: var(--text-faint) !important;
       font-style: italic;
     }
+
+    .welcome-tiers {
+      font-size: 0.9rem !important;
+      color: var(--text-light) !important;
+      margin-top: 1rem !important;
+      text-align: center;
+    }
+
+    .welcome-tiers a {
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .welcome-tiers a:hover { text-decoration: underline; }
 
     .btn {
       display: inline-flex;
@@ -211,27 +268,41 @@
       box-shadow: 0 6px 20px rgba(10, 22, 40, 0.2);
     }
 
-    .btn-primary:active {
-      transform: translateY(0);
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--ink);
+      border: 2px solid rgba(10, 22, 40, 0.15);
+      padding: 0.75rem 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--ink);
+      background: rgba(10, 22, 40, 0.03);
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: white;
+      padding: 0.85rem 1.75rem;
+      font-size: 1rem;
+    }
+
+    .btn-gold:hover {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(201, 162, 39, 0.25);
     }
 
     /* ─── Interview Screen ───────────────────────────────── */
 
-    .interview {
-      flex: 1;
-      min-height: calc(100vh - 60px);
-    }
+    .interview { flex: 1; min-height: calc(100vh - 60px); }
 
-    .messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 2rem 0;
-    }
+    .messages { flex: 1; overflow-y: auto; padding: 2rem 0; }
 
-    .message {
-      margin-bottom: 1.5rem;
-      animation: fadeUp 0.3s ease-out;
-    }
+    .message { margin-bottom: 1.5rem; animation: fadeUp 0.3s ease-out; }
 
     .message-bubble {
       max-width: 85%;
@@ -251,10 +322,7 @@
       box-shadow: 0 2px 8px rgba(10, 22, 40, 0.04);
     }
 
-    .message.user {
-      display: flex;
-      justify-content: flex-end;
-    }
+    .message.user { display: flex; justify-content: flex-end; }
 
     .message.user .message-bubble {
       background: var(--ink);
@@ -263,23 +331,18 @@
     }
 
     .typing-indicator {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      display: flex; align-items: center; gap: 0.5rem;
       padding: 1rem 1.25rem;
       background: white;
       border: 1px solid rgba(10, 22, 40, 0.08);
-      border-radius: 16px;
-      border-bottom-left-radius: 4px;
+      border-radius: 16px; border-bottom-left-radius: 4px;
       max-width: 120px;
       box-shadow: 0 2px 8px rgba(10, 22, 40, 0.04);
       animation: fadeUp 0.3s ease-out;
     }
 
     .typing-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
+      width: 7px; height: 7px; border-radius: 50%;
       background: var(--text-faint);
       animation: typingBounce 1.4s ease-in-out infinite;
     }
@@ -298,203 +361,167 @@
       padding: 1rem 0 1.5rem;
       border-top: 1px solid rgba(10, 22, 40, 0.06);
       background: var(--cream);
-      position: sticky;
-      bottom: 0;
+      position: sticky; bottom: 0;
     }
 
-    .input-wrapper {
-      display: flex;
-      gap: 0.75rem;
-      align-items: flex-end;
-    }
+    .input-wrapper { display: flex; gap: 0.75rem; align-items: flex-end; }
 
     .input-field {
       flex: 1;
       padding: 0.9rem 1.15rem;
       border: 2px solid rgba(10, 22, 40, 0.1);
       border-radius: var(--radius);
-      font-family: inherit;
-      font-size: 1rem;
-      color: var(--text);
-      background: white;
-      resize: none;
-      outline: none;
+      font-family: inherit; font-size: 1rem; color: var(--text);
+      background: white; resize: none; outline: none;
       transition: border-color 0.2s;
-      min-height: 48px;
-      max-height: 150px;
-      line-height: 1.5;
+      min-height: 48px; max-height: 150px; line-height: 1.5;
     }
 
-    .input-field:focus {
-      border-color: var(--gold);
-    }
-
-    .input-field::placeholder {
-      color: var(--text-faint);
-    }
+    .input-field:focus { border-color: var(--gold); }
+    .input-field::placeholder { color: var(--text-faint); }
 
     .send-btn {
-      width: 48px;
-      height: 48px;
-      border-radius: var(--radius);
-      background: var(--ink);
-      color: var(--cream);
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-      flex-shrink: 0;
+      width: 48px; height: 48px; border-radius: var(--radius);
+      background: var(--ink); color: var(--cream); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; flex-shrink: 0;
     }
 
-    .send-btn:hover:not(:disabled) {
-      background: var(--ink-light);
-      transform: translateY(-1px);
-    }
+    .send-btn:hover:not(:disabled) { background: var(--ink-light); transform: translateY(-1px); }
+    .send-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .send-btn svg { width: 20px; height: 20px; }
 
-    .send-btn:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-    }
-
-    .send-btn svg {
-      width: 20px;
-      height: 20px;
-    }
-
-    .input-hint {
-      font-size: 0.78rem;
-      color: var(--text-faint);
-      margin-top: 0.5rem;
-    }
+    .input-hint { font-size: 0.78rem; color: var(--text-faint); margin-top: 0.5rem; }
 
     /* ─── Report Screen ──────────────────────────────────── */
 
-    .report {
-      padding: 2rem 0 4rem;
-    }
+    .report { padding: 2rem 0 4rem; }
 
     .report-header {
-      text-align: center;
-      margin-bottom: 2.5rem;
+      text-align: center; margin-bottom: 2.5rem;
       animation: fadeUp 0.4s ease-out;
     }
 
-    .report-header h1 {
-      font-size: 2rem;
-      color: var(--ink);
-      margin-bottom: 0.35rem;
-    }
-
-    .report-header p {
-      color: var(--text-faint);
-      font-size: 0.95rem;
-    }
+    .report-header h1 { font-size: 2rem; color: var(--ink); margin-bottom: 0.35rem; }
+    .report-header p { color: var(--text-faint); font-size: 0.95rem; }
 
     .report-card {
-      background: white;
-      border-radius: var(--radius);
-      padding: 2rem;
-      margin-bottom: 1.25rem;
+      background: white; border-radius: var(--radius);
+      padding: 2rem; margin-bottom: 1.25rem;
       box-shadow: 0 2px 12px rgba(10, 22, 40, 0.04);
       border: 1px solid rgba(10, 22, 40, 0.06);
       animation: fadeUp 0.4s ease-out;
     }
 
     .report-card h3 {
-      font-size: 1.1rem;
-      color: var(--ink);
-      margin-bottom: 0.75rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      font-size: 1.1rem; color: var(--ink); margin-bottom: 0.75rem;
+      display: flex; align-items: center; gap: 0.5rem;
     }
 
-    .report-card h3 .icon {
-      font-size: 1.2rem;
+    .report-card h3 .icon { font-size: 1.2rem; }
+    .report-card p { color: var(--text-light); font-size: 1rem; line-height: 1.7; }
+
+    /* Report: Hook */
+    .report-hook {
+      background: linear-gradient(135deg, var(--ink), var(--ink-mid));
+      color: var(--cream); padding: 2.5rem 2rem;
+      border-radius: var(--radius); margin-bottom: 1.5rem;
+      text-align: center; animation: fadeUp 0.4s ease-out;
     }
 
-    .report-card p {
-      color: var(--text-light);
-      font-size: 1rem;
-      line-height: 1.7;
+    .report-hook p {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem; font-style: italic;
+      line-height: 1.4; color: var(--gold-light);
     }
 
+    /* Report: Reframe */
+    .reframe-callout {
+      background: var(--gold-faint);
+      border-left: 4px solid var(--gold);
+      padding: 1.25rem 1.5rem;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin-bottom: 1.25rem; animation: fadeUp 0.4s ease-out;
+    }
+
+    .reframe-callout p {
+      font-size: 1.05rem; font-weight: 500;
+      color: var(--ink); line-height: 1.5;
+    }
+
+    /* Report: Severity */
     .severity-bar {
-      height: 6px;
-      background: rgba(10, 22, 40, 0.06);
-      border-radius: 3px;
-      margin-top: 0.75rem;
-      overflow: hidden;
+      height: 6px; background: rgba(10, 22, 40, 0.06);
+      border-radius: 3px; margin-top: 0.75rem; overflow: hidden;
     }
 
     .severity-fill {
-      height: 100%;
-      border-radius: 3px;
+      height: 100%; border-radius: 3px;
       transition: width 0.8s ease-out;
     }
 
     .constraints-list {
-      list-style: none;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
+      list-style: none; display: flex; flex-wrap: wrap;
+      gap: 0.5rem; margin-top: 0.5rem;
     }
 
     .constraints-list li {
-      background: var(--gold-faint);
-      color: var(--text);
-      padding: 0.35rem 0.85rem;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      border: 1px solid rgba(201, 162, 39, 0.15);
+      background: var(--gold-faint); color: var(--text);
+      padding: 0.35rem 0.85rem; border-radius: 20px;
+      font-size: 0.9rem; border: 1px solid rgba(201, 162, 39, 0.15);
     }
 
-    /* ─── Pathways ───────────────────────────────────────── */
+    /* Report: Landscape */
+    .landscape-grid { display: grid; gap: 0.75rem; }
 
-    .pathways-grid {
-      display: grid;
-      gap: 1rem;
-      margin-top: 0.5rem;
+    .landscape-item {
+      background: var(--cream); border-radius: var(--radius);
+      padding: 1.25rem; border: 1px solid rgba(10, 22, 40, 0.06);
     }
+
+    .landscape-item h4 {
+      font-family: 'Source Sans 3', sans-serif; font-weight: 700;
+      color: var(--ink); font-size: 1rem;
+    }
+
+    .landscape-item a {
+      color: inherit; text-decoration: none;
+      border-bottom: 1px solid var(--gold);
+    }
+
+    .landscape-item a:hover { color: var(--gold); }
+
+    .landscape-does { font-size: 0.9rem; color: var(--text-light); margin: 0.35rem 0; }
+
+    .landscape-gap {
+      font-size: 0.9rem; color: var(--text); margin-top: 0.5rem;
+    }
+
+    /* Report: Pathways */
+    .pathways-grid { display: grid; gap: 1rem; margin-top: 0.5rem; }
 
     .pathway {
-      background: var(--cream);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      border: 1px solid rgba(10, 22, 40, 0.06);
+      background: var(--cream); border-radius: var(--radius);
+      padding: 1.5rem; border: 1px solid rgba(10, 22, 40, 0.06);
     }
 
     .pathway-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 0.5rem;
-      flex-wrap: wrap;
-      gap: 0.5rem;
+      display: flex; justify-content: space-between;
+      align-items: flex-start; margin-bottom: 0.5rem;
+      flex-wrap: wrap; gap: 0.5rem;
     }
 
     .pathway h4 {
       font-family: 'Source Sans 3', sans-serif;
-      font-weight: 700;
-      font-size: 1rem;
-      color: var(--ink);
+      font-weight: 700; font-size: 1rem; color: var(--ink);
     }
 
-    .pathway-meta {
-      display: flex;
-      gap: 0.5rem;
-    }
+    .pathway-meta { display: flex; gap: 0.5rem; }
 
     .pathway-tag {
-      font-size: 0.75rem;
-      padding: 0.2rem 0.6rem;
-      border-radius: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
+      font-size: 0.75rem; padding: 0.2rem 0.6rem;
+      border-radius: 12px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.03em;
     }
 
     .tag-effort-low { background: #e8f5e9; color: #2e7d32; }
@@ -505,76 +532,77 @@
     .tag-impact-high { background: #ede7f6; color: #4527a0; }
     .tag-impact-variable { background: #f3e5f5; color: #6a1b9a; }
 
-    .pathway p {
-      color: var(--text-light);
-      font-size: 0.95rem;
-      line-height: 1.6;
+    .pathway p { color: var(--text-light); font-size: 0.95rem; line-height: 1.6; }
+    .pathway-timeframe { font-size: 0.85rem; color: var(--text-faint); margin-top: 0.5rem; font-weight: 500; }
+
+    .pathway-first-step {
+      margin-top: 0.75rem; padding: 0.75rem 1rem;
+      background: white; border-radius: calc(var(--radius) - 2px);
+      font-size: 0.9rem; color: var(--ink);
+      border: 1px solid rgba(201, 162, 39, 0.2);
     }
 
-    .pathway-timeframe {
-      font-size: 0.85rem;
-      color: var(--text-faint);
-      margin-top: 0.5rem;
-      font-weight: 500;
+    .pathway-first-step strong { color: var(--gold); }
+
+    /* Report: Creative Angles */
+    .angles-list { display: grid; gap: 0.75rem; }
+
+    .angle-item {
+      background: var(--cream); padding: 1.25rem;
+      border-radius: var(--radius); border-left: 3px solid var(--copper);
     }
 
-    /* ─── Actions ────────────────────────────────────────── */
-
-    .actions-list {
-      list-style: none;
-      counter-reset: actions;
+    .angle-item h4 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 700; font-size: 1rem;
+      color: var(--ink); margin-bottom: 0.35rem;
     }
+
+    .angle-item p { font-size: 0.9rem; color: var(--text-light); }
+
+    /* Report: What If */
+    .what-if-card { background: linear-gradient(135deg, #faf8f5, #f5f0e8) !important; }
+    .what-if-list { display: grid; gap: 0.5rem; }
+
+    .what-if-item {
+      padding: 1rem 1.25rem; border-radius: var(--radius); background: white;
+    }
+
+    .what-if-item p {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem; font-style: italic;
+      color: var(--ink); line-height: 1.5;
+    }
+
+    /* Report: Actions */
+    .actions-list { list-style: none; counter-reset: actions; }
 
     .actions-list li {
       counter-increment: actions;
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
+      display: flex; align-items: flex-start; gap: 0.75rem;
       padding: 0.75rem 0;
       border-bottom: 1px solid rgba(10, 22, 40, 0.04);
-      font-size: 1rem;
-      color: var(--text);
-      line-height: 1.5;
+      font-size: 1rem; color: var(--text); line-height: 1.5;
     }
 
-    .actions-list li:last-child {
-      border-bottom: none;
-    }
+    .actions-list li:last-child { border-bottom: none; }
 
     .actions-list li::before {
       content: counter(actions);
-      flex-shrink: 0;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: var(--ink);
-      color: var(--cream);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.8rem;
-      font-weight: 700;
-      margin-top: 0.1rem;
+      flex-shrink: 0; width: 28px; height: 28px;
+      border-radius: 50%; background: var(--ink); color: var(--cream);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 700; margin-top: 0.1rem;
     }
 
-    /* ─── Tools ──────────────────────────────────────────── */
-
-    .tools-grid {
-      display: grid;
-      gap: 0.75rem;
-      margin-top: 0.5rem;
-    }
+    /* Report: Tools */
+    .tools-grid { display: grid; gap: 0.75rem; margin-top: 0.5rem; }
 
     .tool-card {
-      display: flex;
-      gap: 1rem;
-      padding: 1rem 1.25rem;
-      background: var(--cream);
-      border-radius: var(--radius);
+      display: flex; gap: 1rem; padding: 1rem 1.25rem;
+      background: var(--cream); border-radius: var(--radius);
       border: 1px solid rgba(10, 22, 40, 0.06);
-      text-decoration: none;
-      color: inherit;
-      transition: all 0.2s;
+      text-decoration: none; color: inherit; transition: all 0.2s;
     }
 
     .tool-card:hover {
@@ -584,162 +612,383 @@
     }
 
     .tool-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: var(--radius);
+      width: 40px; height: 40px; border-radius: var(--radius);
       background: var(--gold-faint);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 1.1rem;
     }
 
     .tool-info h4 {
       font-family: 'Source Sans 3', sans-serif;
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: var(--ink);
-      margin-bottom: 0.15rem;
+      font-weight: 600; font-size: 0.95rem;
+      color: var(--ink); margin-bottom: 0.15rem;
     }
 
-    .tool-info p {
-      font-size: 0.85rem;
-      color: var(--text-light);
-      line-height: 1.4;
+    .tool-info p { font-size: 0.85rem; color: var(--text-light); line-height: 1.4; }
+
+    .tool-meta {
+      display: flex; gap: 0.75rem; align-items: center; margin-top: 0.25rem;
     }
 
     .tool-category {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--gold);
-      font-weight: 700;
-      margin-top: 0.25rem;
+      font-size: 0.7rem; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--gold); font-weight: 700;
     }
 
-    /* ─── Pattern Notice ─────────────────────────────────── */
+    .tool-cost-tag {
+      font-size: 0.7rem; padding: 0.15rem 0.5rem;
+      border-radius: 10px; background: rgba(10, 22, 40, 0.05);
+      color: var(--text-light); font-weight: 600;
+    }
 
+    /* Report: Pattern Notice */
     .pattern-notice {
       background: linear-gradient(135deg, var(--ink), var(--ink-light));
-      color: var(--cream);
-      padding: 1.5rem 2rem;
-      border-radius: var(--radius);
+      color: var(--cream); padding: 1.5rem 2rem; border-radius: var(--radius);
       margin-top: 0.5rem;
     }
 
     .pattern-notice h4 {
+      font-family: 'Source Sans 3', sans-serif; font-weight: 700;
+      color: var(--gold-light); margin-bottom: 0.35rem;
+      font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+
+    .pattern-notice p { color: rgba(250, 248, 245, 0.85); font-size: 0.95rem; line-height: 1.6; }
+
+    /* Report: Upgrade CTAs */
+    .report-upgrade {
+      background: white; border-radius: var(--radius);
+      padding: 2rem; margin-top: 1.5rem; margin-bottom: 1.25rem;
+      border: 2px solid var(--gold);
+      text-align: center; animation: fadeUp 0.4s ease-out;
+    }
+
+    .report-upgrade h3 {
+      font-size: 1.25rem; color: var(--ink); margin-bottom: 0.5rem;
+      justify-content: center;
+    }
+
+    .report-upgrade > p {
+      color: var(--text-light); margin-bottom: 1.5rem;
+    }
+
+    .upgrade-options {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+    }
+
+    .upgrade-option {
+      padding: 1.5rem; border-radius: var(--radius);
+      border: 1px solid rgba(10, 22, 40, 0.08);
+      text-align: left;
+    }
+
+    .upgrade-option h4 {
       font-family: 'Source Sans 3', sans-serif;
-      font-weight: 700;
-      color: var(--gold-light);
-      margin-bottom: 0.35rem;
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      font-weight: 700; font-size: 1rem; color: var(--ink);
+      margin-bottom: 0.25rem;
     }
 
-    .pattern-notice p {
-      color: rgba(250, 248, 245, 0.85);
-      font-size: 0.95rem;
-      line-height: 1.6;
+    .upgrade-option .price {
+      font-size: 1.25rem; font-weight: 700; color: var(--gold);
+      margin-bottom: 0.5rem;
     }
 
-    /* ─── Report Footer ──────────────────────────────────── */
+    .upgrade-option p {
+      font-size: 0.9rem; color: var(--text-light);
+      margin-bottom: 1rem; line-height: 1.5;
+    }
 
+    .upgrade-option .btn {
+      width: 100%; padding: 0.75rem; margin-top: 0;
+    }
+
+    /* Report: Footer */
     .report-footer {
-      text-align: center;
-      padding: 2.5rem 0;
+      text-align: center; padding: 2.5rem 0;
       border-top: 1px solid rgba(10, 22, 40, 0.06);
-      margin-top: 2rem;
-      animation: fadeUp 0.4s ease-out;
+      margin-top: 2rem; animation: fadeUp 0.4s ease-out;
     }
 
-    .report-footer p {
-      color: var(--text-faint);
-      font-size: 0.95rem;
-      margin-bottom: 1rem;
-    }
-
-    .btn-secondary {
-      background: transparent;
-      color: var(--ink);
-      border: 2px solid rgba(10, 22, 40, 0.15);
-      padding: 0.75rem 1.5rem;
-      font-size: 0.95rem;
-    }
-
-    .btn-secondary:hover {
-      border-color: var(--ink);
-      background: rgba(10, 22, 40, 0.03);
-    }
+    .report-footer p { color: var(--text-faint); font-size: 0.95rem; margin-bottom: 1rem; }
 
     /* ─── Loading Screen ─────────────────────────────────── */
 
     .loading {
-      justify-content: center;
-      align-items: center;
-      min-height: calc(100vh - 60px);
-      text-align: center;
+      justify-content: center; align-items: center;
+      min-height: calc(100vh - 60px); text-align: center;
     }
 
-    .loading-content {
-      animation: fadeUp 0.4s ease-out;
-    }
+    .loading-content { animation: fadeUp 0.4s ease-out; }
 
     .spinner {
-      width: 48px;
-      height: 48px;
+      width: 48px; height: 48px;
       border: 3px solid rgba(10, 22, 40, 0.08);
-      border-top-color: var(--ink);
-      border-radius: 50%;
+      border-top-color: var(--ink); border-radius: 50%;
       animation: spin 0.8s linear infinite;
       margin: 0 auto 1.5rem;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    .loading h2 {
-      font-size: 1.35rem;
-      color: var(--ink);
-      margin-bottom: 0.35rem;
-    }
-
-    .loading p {
-      color: var(--text-faint);
-      font-size: 0.95rem;
-    }
+    .loading h2 { font-size: 1.35rem; color: var(--ink); margin-bottom: 0.35rem; }
+    .loading p { color: var(--text-faint); font-size: 0.95rem; }
 
     /* ─── Error Screen ───────────────────────────────────── */
 
     .error-screen {
-      justify-content: center;
-      align-items: center;
-      min-height: calc(100vh - 60px);
+      justify-content: center; align-items: center;
+      min-height: calc(100vh - 60px); text-align: center;
+    }
+
+    .error-content { animation: fadeUp 0.4s ease-out; max-width: 400px; }
+    .error-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .error-content h2 { font-size: 1.35rem; color: var(--ink); margin-bottom: 0.5rem; }
+    .error-content p { color: var(--text-light); margin-bottom: 1.5rem; }
+
+    /* ─── Static Pages (Tools, Showcase, Pricing) ─────────── */
+
+    .static-page {
+      padding: 3rem 0 4rem;
+    }
+
+    .static-page .page-header {
+      text-align: center; margin-bottom: 3rem;
+    }
+
+    .static-page .page-header h1 {
+      font-size: 2.25rem; color: var(--ink);
+      margin-bottom: 0.5rem; letter-spacing: -0.02em;
+    }
+
+    .static-page .page-header p {
+      color: var(--text-light); font-size: 1.1rem;
+      max-width: 540px; margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.75rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--gold); margin-bottom: 0.5rem;
+    }
+
+    .page-section {
+      margin-bottom: 3rem;
+    }
+
+    .page-section h2 {
+      font-size: 1.5rem; color: var(--ink); margin-bottom: 0.5rem;
+    }
+
+    .page-section > .section-intro {
+      color: var(--text-light); margin-bottom: 1.5rem;
+      font-size: 1rem; max-width: 560px;
+    }
+
+    /* Tools Page: Tool List Cards */
+    .tl-card {
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 0.5rem 1.5rem; align-items: start;
+      padding: 1.25rem 1.5rem; background: white;
+      border-radius: var(--radius);
+      border: 1px solid rgba(10, 22, 40, 0.06);
+      margin-bottom: 0.75rem; transition: all 0.2s;
+    }
+
+    .tl-card:hover {
+      border-color: var(--gold);
+      box-shadow: 0 4px 16px rgba(10, 22, 40, 0.06);
+    }
+
+    .tl-card h4 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 700; font-size: 1rem; color: var(--ink);
+    }
+
+    .tl-card .tl-cost {
+      font-weight: 700; color: var(--gold);
+      font-size: 0.9rem; white-space: nowrap; text-align: right;
+    }
+
+    .tl-card p {
+      font-size: 0.9rem; color: var(--text-light);
+      grid-column: 1 / -1; line-height: 1.5;
+    }
+
+    .tl-card a {
+      color: var(--ink); font-weight: 600; font-size: 0.85rem;
+      text-decoration: none; border-bottom: 1px solid var(--gold);
+    }
+
+    .tl-card a:hover { color: var(--gold); }
+
+    /* Tools: Cost Summary */
+    .cost-summary {
+      background: white; border-radius: var(--radius);
+      padding: 2rem; border: 1px solid rgba(10, 22, 40, 0.06);
+    }
+
+    .cost-summary h3 { margin-bottom: 1.25rem; }
+
+    .cost-tiers {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+    }
+
+    .cost-tier {
+      padding: 1.5rem; background: var(--cream);
+      border-radius: var(--radius); text-align: center;
+    }
+
+    .cost-tier h4 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 700; font-size: 0.95rem;
+      color: var(--ink); margin-bottom: 0.35rem;
+    }
+
+    .cost-amount {
+      font-size: 1.5rem; font-weight: 700;
+      color: var(--gold); margin-bottom: 0.35rem;
+    }
+
+    .cost-tier p { font-size: 0.85rem; color: var(--text-light); }
+
+    /* Showcase: Project Cards */
+    .showcase-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;
+    }
+
+    .showcase-card {
+      background: white; border-radius: var(--radius);
+      border: 1px solid rgba(10, 22, 40, 0.06);
+      padding: 1.5rem; transition: all 0.25s;
+    }
+
+    .showcase-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(10, 22, 40, 0.08);
+    }
+
+    .showcase-tag {
+      display: inline-block; font-size: 0.7rem;
+      text-transform: uppercase; letter-spacing: 0.05em;
+      color: var(--gold); font-weight: 700; margin-bottom: 0.5rem;
+    }
+
+    .showcase-card h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem; color: var(--ink); margin-bottom: 0.35rem;
+    }
+
+    .showcase-card p { font-size: 0.9rem; color: var(--text-light); line-height: 1.5; }
+
+    .showcase-card a {
+      display: inline-block; margin-top: 0.75rem;
+      font-size: 0.85rem; font-weight: 600;
+      color: var(--ink); text-decoration: none;
+      border-bottom: 1px solid var(--gold);
+    }
+
+    .showcase-card a:hover { color: var(--gold); }
+
+    /* Showcase: Ideas */
+    .ideas-grid { display: grid; gap: 1rem; }
+
+    .idea-card {
+      background: white; border-radius: var(--radius);
+      padding: 1.5rem; border-left: 3px solid var(--copper);
+    }
+
+    .idea-card h4 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 700; font-size: 1rem; color: var(--ink);
+      margin-bottom: 0.35rem;
+    }
+
+    .idea-card p { font-size: 0.9rem; color: var(--text-light); line-height: 1.5; }
+
+    .idea-complexity {
+      display: inline-block; margin-top: 0.5rem;
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.05em; padding: 0.2rem 0.6rem;
+      border-radius: 10px;
+    }
+
+    .complexity-weekend { background: #e8f5e9; color: #2e7d32; }
+    .complexity-side-project { background: #fff3e0; color: #e65100; }
+    .complexity-startup { background: #ede7f6; color: #4527a0; }
+
+    /* Showcase: Inspiration */
+    .inspiration-list { display: grid; gap: 0.75rem; }
+
+    .inspiration-item {
+      display: flex; gap: 1rem; padding: 1rem 1.25rem;
+      background: white; border-radius: var(--radius);
+      border: 1px solid rgba(10, 22, 40, 0.06);
+      text-decoration: none; color: inherit; transition: all 0.2s;
+    }
+
+    .inspiration-item:hover {
+      border-color: var(--gold); transform: translateX(3px);
+    }
+
+    .inspiration-item h4 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 600; font-size: 0.95rem; color: var(--ink);
+      margin-bottom: 0.15rem;
+    }
+
+    .inspiration-item p { font-size: 0.85rem; color: var(--text-light); line-height: 1.4; }
+
+    /* Pricing Page */
+    .pricing-cards {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+    }
+
+    .pricing-card {
+      background: white; border-radius: var(--radius);
+      padding: 2rem; border: 1px solid rgba(10, 22, 40, 0.06);
       text-align: center;
     }
 
-    .error-content {
-      animation: fadeUp 0.4s ease-out;
-      max-width: 400px;
+    .pricing-card.featured {
+      border: 2px solid var(--gold);
+      position: relative;
     }
 
-    .error-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
+    .pricing-card.featured::before {
+      content: 'MOST POPULAR';
+      position: absolute; top: -12px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--gold); color: white;
+      font-size: 0.7rem; font-weight: 700;
+      padding: 0.25rem 0.75rem; border-radius: 10px;
+      letter-spacing: 0.05em;
     }
 
-    .error-content h2 {
-      font-size: 1.35rem;
-      color: var(--ink);
-      margin-bottom: 0.5rem;
+    .pricing-card h3 {
+      font-size: 1.15rem; color: var(--ink); margin-bottom: 0.5rem;
+      justify-content: center;
     }
 
-    .error-content p {
-      color: var(--text-light);
+    .pricing-price {
+      font-size: 2rem; font-weight: 700; color: var(--gold); margin-bottom: 0.25rem;
+    }
+
+    .pricing-period { font-size: 0.85rem; color: var(--text-faint); margin-bottom: 1.25rem; }
+
+    .pricing-features {
+      list-style: none; text-align: left;
       margin-bottom: 1.5rem;
     }
+
+    .pricing-features li {
+      padding: 0.4rem 0; font-size: 0.9rem;
+      color: var(--text-light); border-bottom: 1px solid rgba(10, 22, 40, 0.04);
+    }
+
+    .pricing-features li:last-child { border-bottom: none; }
+
+    .pricing-card .btn { width: 100%; margin-top: 0; }
 
     /* ─── Animations ─────────────────────────────────────── */
 
@@ -751,19 +1000,33 @@
     /* ─── Responsive ─────────────────────────────────────── */
 
     @media (max-width: 640px) {
-      .container { padding: 0 1rem; }
+      .container, .container-wide { padding: 0 1rem; }
       .welcome-card h1 { font-size: 2rem; }
       .welcome-body { padding: 1.5rem; }
       .report-card { padding: 1.5rem; }
       .message-bubble { max-width: 92%; }
+      .header-nav { gap: 1rem; }
+      .nav-link { font-size: 0.8rem; }
+      .cost-tiers { grid-template-columns: 1fr; }
+      .showcase-grid { grid-template-columns: 1fr; }
+      .pricing-cards { grid-template-columns: 1fr; }
+      .upgrade-options { grid-template-columns: 1fr; }
+      .report-hook p { font-size: 1.25rem; }
+      .static-page .page-header h1 { font-size: 1.75rem; }
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="container header-inner">
-      <div class="logo">The Brunel <span>Engine</span></div>
-      <div class="header-status" id="headerStatus">
+    <div class="header-inner">
+      <a href="#welcome" class="logo" id="logoLink">The Brunel <span>Engine</span></a>
+      <nav class="header-nav" id="headerNav">
+        <a href="#tools" class="nav-link">Tools</a>
+        <a href="#showcase" class="nav-link">Showcase</a>
+        <a href="#pricing" class="nav-link">Pricing</a>
+        <a href="#welcome" class="nav-link nav-cta" id="navStartBtn">Start</a>
+      </nav>
+      <div class="header-status" id="headerStatus" style="display:none;">
         <div class="status-dot"></div>
         <span>Ready</span>
       </div>
@@ -787,6 +1050,8 @@
           <p class="welcome-privacy">Your responses generate a private report. Only you see it. Nothing is stored.</p>
 
           <button class="btn btn-primary" id="startBtn">Begin the Interview</button>
+
+          <p class="welcome-tiers">Free to start. <a href="#pricing">Go deeper if you want.</a></p>
         </div>
       </div>
     </div>
@@ -798,12 +1063,7 @@
       <div class="messages" id="messages"></div>
       <div class="input-area">
         <div class="input-wrapper">
-          <textarea
-            class="input-field"
-            id="inputField"
-            placeholder="Type your response..."
-            rows="1"
-          ></textarea>
+          <textarea class="input-field" id="inputField" placeholder="Type your response..." rows="1"></textarea>
           <button class="send-btn" id="sendBtn" disabled>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <line x1="22" y1="2" x2="11" y2="13"></line>
@@ -833,8 +1093,29 @@
         <p>Private. Only you see this.</p>
       </div>
       <div id="reportContent"></div>
+
+      <!-- Upgrade CTAs -->
+      <div class="report-upgrade" id="reportUpgrade">
+        <h3>Want to go further?</h3>
+        <p>This report is yours to keep. If you want more, there are two options.</p>
+        <div class="upgrade-options">
+          <div class="upgrade-option">
+            <h4>Deep Dive Report</h4>
+            <div class="price">&pound;2</div>
+            <p>A follow-up analysis on a specific pathway, with deeper research and more creative angles.</p>
+            <button class="btn btn-secondary" onclick="alert('Payments launching soon. Check back shortly.')">Coming Soon</button>
+          </div>
+          <div class="upgrade-option">
+            <h4>1:1 with Matt</h4>
+            <div class="price">&pound;50<span style="font-size:0.7em;font-weight:400;color:var(--text-faint)">/hour</span></div>
+            <p>Talk it through with a real human. Strategy session to turn your report into action.</p>
+            <a href="https://calendly.com/matt-claimour" target="_blank" rel="noopener" class="btn btn-gold">Book a Session</a>
+          </div>
+        </div>
+      </div>
+
       <div class="report-footer">
-        <p>Found this useful?</p>
+        <p>Found this useful? Share the Brunel Engine with someone who's stuck.</p>
         <button class="btn btn-secondary" id="restartBtn">Start a new session</button>
       </div>
     </div>
@@ -850,10 +1131,339 @@
     </div>
   </div>
 
+  <!-- Tools Page -->
+  <div class="screen static-page" id="screen-tools">
+    <div class="container-wide">
+      <div class="page-header">
+        <h1>What You Actually Need</h1>
+        <p>Every tool to go from idea to shipped product. Real costs. No fluff. No "it depends."</p>
+      </div>
+
+      <section class="page-section">
+        <div class="section-label">THE ESSENTIALS</div>
+        <h2>What you can't skip</h2>
+        <p class="section-intro">The bare minimum to build and ship something real. Total cost: roughly &pound;0&ndash;20/month to start.</p>
+
+        <div class="tl-card">
+          <h4>Domain Name</h4>
+          <div class="tl-cost">~&pound;8/yr</div>
+          <p>Your address on the internet. <a href="https://www.cloudflare.com/products/registrar/" target="_blank" rel="noopener">Cloudflare Registrar</a> sells at cost. <a href="https://www.namecheap.com" target="_blank" rel="noopener">Namecheap</a> is the next best option.</p>
+        </div>
+
+        <div class="tl-card">
+          <h4>Hosting</h4>
+          <div class="tl-cost">Free</div>
+          <p><a href="https://vercel.com" target="_blank" rel="noopener">Vercel</a>, <a href="https://www.netlify.com" target="_blank" rel="noopener">Netlify</a>, or <a href="https://pages.cloudflare.com" target="_blank" rel="noopener">Cloudflare Pages</a>. All have generous free tiers for static sites and serverless functions. This site runs on Vercel's free plan.</p>
+        </div>
+
+        <div class="tl-card">
+          <h4>Code Editor</h4>
+          <div class="tl-cost">Free &ndash; &pound;16/mo</div>
+          <p><a href="https://code.visualstudio.com" target="_blank" rel="noopener">VS Code</a> is free and excellent. <a href="https://cursor.com" target="_blank" rel="noopener">Cursor</a> (&pound;16/mo) adds AI coding assistance that genuinely speeds things up.</p>
+        </div>
+
+        <div class="tl-card">
+          <h4>Version Control</h4>
+          <div class="tl-cost">Free</div>
+          <p><a href="https://github.com" target="_blank" rel="noopener">GitHub</a>. Where your code lives. Free for public and private repos. Non-negotiable.</p>
+        </div>
+
+        <div class="tl-card">
+          <h4>AI Assistant</h4>
+          <div class="tl-cost">~&pound;16/mo</div>
+          <p><a href="https://claude.ai" target="_blank" rel="noopener">Claude</a> or <a href="https://chat.openai.com" target="_blank" rel="noopener">ChatGPT</a>. Your co-pilot for code, copy, research, and debugging. Not optional in 2026.</p>
+        </div>
+
+        <div class="tl-card">
+          <h4>Design</h4>
+          <div class="tl-cost">Free</div>
+          <p><a href="https://www.figma.com" target="_blank" rel="noopener">Figma</a>. Design before you build. The free tier covers solo projects easily.</p>
+        </div>
+      </section>
+
+      <section class="page-section">
+        <div class="section-label">WORTH THE MONEY</div>
+        <h2>If you want to spend more</h2>
+        <p class="section-intro">Not essential at the start, but each one solves a real problem you'll hit once you're past the prototype stage.</p>
+
+        <div class="tl-card">
+          <h4>AI API Access</h4>
+          <div class="tl-cost">Pay-per-use</div>
+          <p>When your app needs AI built in. <a href="https://docs.anthropic.com" target="_blank" rel="noopener">Claude API</a> or <a href="https://platform.openai.com" target="_blank" rel="noopener">OpenAI API</a>. Costs pennies per call at small scale. This site's interview runs on Claude Sonnet 4.</p>
+        </div>
+
+        <div class="tl-card">
+          <h4>Database</h4>
+          <div class="tl-cost">Free tier</div>
+          <p><a href="https://supabase.com" target="_blank" rel="noopener">Supabase</a> gives you Postgres + auth + storage free. <a href="https://turso.tech" target="_blank" rel="noopener">Turso</a> for edge SQLite. You'll need to store data eventually.</p>
+        </div>
+
+        <div class="tl-card">
+          <h4>Authentication</h4>
+          <div class="tl-cost">Free tier</div>
+          <p><a href="https://clerk.com" target="_blank" rel="noopener">Clerk</a> or Supabase Auth. Don't build login yourself. You'll get it wrong. These handle it properly.</p>
+        </div>
+
+        <div class="tl-card">
+          <h4>Payments</h4>
+          <div class="tl-cost">2.9% + 30p/tx</div>
+          <p><a href="https://stripe.com" target="_blank" rel="noopener">Stripe</a>. When you want to charge money. No monthly fee &mdash; they take a cut per transaction. Best developer experience in payments.</p>
+        </div>
+
+        <div class="tl-card">
+          <h4>Email</h4>
+          <div class="tl-cost">Free tier</div>
+          <p><a href="https://resend.com" target="_blank" rel="noopener">Resend</a> for transactional email. 3,000 emails/month free. Clean API, built by developers.</p>
+        </div>
+
+        <div class="tl-card">
+          <h4>Analytics</h4>
+          <div class="tl-cost">&pound;7/mo &ndash; Free</div>
+          <p><a href="https://plausible.io" target="_blank" rel="noopener">Plausible</a> (&pound;7/mo) is privacy-friendly and simple. <a href="https://posthog.com" target="_blank" rel="noopener">PostHog</a> is more powerful with a generous free tier.</p>
+        </div>
+
+        <div class="tl-card">
+          <h4>Error Monitoring</h4>
+          <div class="tl-cost">Free tier</div>
+          <p><a href="https://sentry.io" target="_blank" rel="noopener">Sentry</a>. Find out when things break before your users tell you. Free tier covers small projects.</p>
+        </div>
+
+        <div class="tl-card">
+          <h4>DNS &amp; CDN</h4>
+          <div class="tl-cost">Free</div>
+          <p><a href="https://www.cloudflare.com" target="_blank" rel="noopener">Cloudflare</a>. Speed, security, DDoS protection. The free tier is absurdly generous.</p>
+        </div>
+      </section>
+
+      <section class="page-section">
+        <div class="section-label">THE HONEST MATHS</div>
+        <h2>What it actually costs</h2>
+        <div class="cost-summary">
+          <div class="cost-tiers">
+            <div class="cost-tier">
+              <h4>Scrappy Start</h4>
+              <div class="cost-amount">&pound;0&ndash;20/mo</div>
+              <p>Free tiers, your own laptop, elbow grease. Enough to ship a real product.</p>
+            </div>
+            <div class="cost-tier">
+              <h4>Proper Setup</h4>
+              <div class="cost-amount">&pound;50&ndash;100/mo</div>
+              <p>Custom domain, paid API access, basic analytics, email. Professional grade.</p>
+            </div>
+            <div class="cost-tier">
+              <h4>Ready to Scale</h4>
+              <div class="cost-amount">&pound;200&ndash;500/mo</div>
+              <p>Team tools, monitoring, paid infra, support. When you have paying customers.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Showcase Page -->
+  <div class="screen static-page" id="screen-showcase">
+    <div class="container-wide">
+      <div class="page-header">
+        <h1>What Others Have Built</h1>
+        <p>Real projects, real people. Built with the same tools you have access to.</p>
+      </div>
+
+      <section class="page-section">
+        <div class="section-label">SHIPPED</div>
+        <h2>Projects that exist in the world</h2>
+        <p class="section-intro">Solo founders and small teams who turned frustrations into products.</p>
+
+        <div class="showcase-grid">
+          <div class="showcase-card">
+            <div class="showcase-tag">Open Source &rarr; Business</div>
+            <h4>Plausible Analytics</h4>
+            <p>Privacy-friendly Google Analytics alternative. Two founders, fully bootstrapped, open source. Now profitable with thousands of customers.</p>
+            <a href="https://plausible.io" target="_blank" rel="noopener">Visit Plausible &rarr;</a>
+          </div>
+
+          <div class="showcase-card">
+            <div class="showcase-tag">Solo Builder</div>
+            <h4>Pieter Levels</h4>
+            <p>Built NomadList, RemoteOK, PhotoAI and more. Ships fast, stays solo. Makes $3M+/year from indie products.</p>
+            <a href="https://levels.io" target="_blank" rel="noopener">See his work &rarr;</a>
+          </div>
+
+          <div class="showcase-card">
+            <div class="showcase-tag">Scheduling</div>
+            <h4>Cal.com</h4>
+            <p>Open-source Calendly alternative. Started as a solo project, now a funded company. Proves you can compete with incumbents.</p>
+            <a href="https://cal.com" target="_blank" rel="noopener">Visit Cal.com &rarr;</a>
+          </div>
+
+          <div class="showcase-card">
+            <div class="showcase-tag">Newsletter</div>
+            <h4>Buttondown</h4>
+            <p>Email newsletter tool built by one person. Clean, simple, profitable. The antithesis of Mailchimp bloat.</p>
+            <a href="https://buttondown.com" target="_blank" rel="noopener">Visit Buttondown &rarr;</a>
+          </div>
+
+          <div class="showcase-card">
+            <div class="showcase-tag">Community</div>
+            <h4>FixMyStreet</h4>
+            <p>Report local problems (potholes, graffiti, broken lights) to your council. Built by mySociety. Genuine civic tech that works.</p>
+            <a href="https://www.fixmystreet.com" target="_blank" rel="noopener">Visit FixMyStreet &rarr;</a>
+          </div>
+
+          <div class="showcase-card">
+            <div class="showcase-tag">Transparency</div>
+            <h4>TheyWorkForYou</h4>
+            <p>Track what your MP says and does in Parliament. Another mySociety project. Democracy needs tools like this.</p>
+            <a href="https://www.theyworkforyou.com" target="_blank" rel="noopener">Visit TWFY &rarr;</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="page-section">
+        <div class="section-label">WHAT IF</div>
+        <h2>Things that could exist</h2>
+        <p class="section-intro">Ideas sparked by real problems. Some are weekend projects. Some are businesses waiting to happen.</p>
+
+        <div class="ideas-grid">
+          <div class="idea-card">
+            <h4>Landlord Ratings Platform</h4>
+            <p>Glassdoor, but for renting. Tenants rate landlords and letting agents. Anonymous, verified, searchable. The information asymmetry in UK renting is absurd.</p>
+            <span class="idea-complexity complexity-side-project">Side Project</span>
+          </div>
+
+          <div class="idea-card">
+            <h4>Council Decision Tracker</h4>
+            <p>FOI meets RSS. Automated monitoring of local council planning decisions, spending, and policy changes. Email digest when something affects your area.</p>
+            <span class="idea-complexity complexity-side-project">Side Project</span>
+          </div>
+
+          <div class="idea-card">
+            <h4>AI Policy Brief Generator</h4>
+            <p>Feed it a regulation, get a plain-English breakdown of who wins, who loses, and what the second-order effects are. For lobbyists, journalists, and citizens who can't read 300-page documents.</p>
+            <span class="idea-complexity complexity-startup">Startup</span>
+          </div>
+
+          <div class="idea-card">
+            <h4>Neighbourhood Problem Board</h4>
+            <p>Nextdoor without the drama. Focused entirely on fixable local problems. Report, upvote, track resolution. No culture wars, just potholes and broken streetlights.</p>
+            <span class="idea-complexity complexity-weekend">Weekend Build</span>
+          </div>
+
+          <div class="idea-card">
+            <h4>Price Comparison for Tradespeople</h4>
+            <p>Checkatrade but honest. Real anonymised quotes for common jobs (boiler install, kitchen refit, extension) by postcode. Stop getting ripped off.</p>
+            <span class="idea-complexity complexity-startup">Startup</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="page-section">
+        <div class="section-label">RABBIT HOLES</div>
+        <h2>Worth your time</h2>
+        <p class="section-intro">Essays, talks, and resources that change how you think about building things.</p>
+
+        <div class="inspiration-list">
+          <a class="inspiration-item" href="https://paulgraham.com/ds.html" target="_blank" rel="noopener">
+            <div>
+              <h4>Do Things That Don't Scale &mdash; Paul Graham</h4>
+              <p>The most important essay for anyone starting something. Do the unscalable work first.</p>
+            </div>
+          </a>
+
+          <a class="inspiration-item" href="https://levels.io/startups" target="_blank" rel="noopener">
+            <div>
+              <h4>MAKE: The Indie Maker Handbook &mdash; Pieter Levels</h4>
+              <p>How to build and ship products as a solo maker. Practical, no-nonsense, from someone who does it.</p>
+            </div>
+          </a>
+
+          <a class="inspiration-item" href="https://www.indiehackers.com/podcasts" target="_blank" rel="noopener">
+            <div>
+              <h4>Indie Hackers Podcast</h4>
+              <p>Founders talking honestly about what works. Real revenue numbers, real struggles.</p>
+            </div>
+          </a>
+
+          <a class="inspiration-item" href="https://stripe.com/atlas/guides" target="_blank" rel="noopener">
+            <div>
+              <h4>Stripe Atlas Guides</h4>
+              <p>Practical guides on starting a company, incorporating, handling taxes. Free, well-written, by Stripe.</p>
+            </div>
+          </a>
+
+          <a class="inspiration-item" href="https://www.mysociety.org" target="_blank" rel="noopener">
+            <div>
+              <h4>mySociety &mdash; Civic Tech That Works</h4>
+              <p>The charity behind FixMyStreet, TheyWorkForYou, WhatDoTheyKnow. Proof that tech can serve democracy.</p>
+            </div>
+          </a>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Pricing Page -->
+  <div class="screen static-page" id="screen-pricing">
+    <div class="container-wide">
+      <div class="page-header">
+        <h1>Simple, Honest Pricing</h1>
+        <p>Start free. Pay only if you want more.</p>
+      </div>
+
+      <div class="pricing-cards">
+        <div class="pricing-card">
+          <h3>Free Report</h3>
+          <div class="pricing-price">&pound;0</div>
+          <div class="pricing-period">Always free</div>
+          <ul class="pricing-features">
+            <li>Full structured interview</li>
+            <li>Detailed analysis report</li>
+            <li>Pathways, tools &amp; creative angles</li>
+            <li>Existing landscape research</li>
+            <li>Private &mdash; nothing stored</li>
+          </ul>
+          <a href="#welcome" class="btn btn-primary" style="margin-top:0;">Start Now</a>
+        </div>
+
+        <div class="pricing-card featured">
+          <h3>Deep Dive</h3>
+          <div class="pricing-price">&pound;2</div>
+          <div class="pricing-period">per report</div>
+          <ul class="pricing-features">
+            <li>Everything in Free</li>
+            <li>Follow-up on specific pathways</li>
+            <li>Deeper landscape research</li>
+            <li>Extended creative angles</li>
+            <li>More actionable first steps</li>
+          </ul>
+          <button class="btn btn-gold" onclick="alert('Payments launching soon. Check back shortly.')">Coming Soon</button>
+        </div>
+
+        <div class="pricing-card">
+          <h3>1:1 with Matt</h3>
+          <div class="pricing-price">&pound;50</div>
+          <div class="pricing-period">per hour</div>
+          <ul class="pricing-features">
+            <li>Video call strategy session</li>
+            <li>Walk through your report together</li>
+            <li>Tailored advice and connections</li>
+            <li>Policy &amp; tech expertise</li>
+            <li>Follow-up action plan</li>
+          </ul>
+          <a href="https://calendly.com/matt-claimour" target="_blank" rel="noopener" class="btn btn-gold">Book on Calendly</a>
+        </div>
+      </div>
+
+      <div style="text-align:center; margin-top:2.5rem; color:var(--text-faint); font-size:0.9rem;">
+        <p>The free report covers API costs. Paid tiers help keep the lights on and let me go deeper.<br>No subscriptions. No lock-in. Pay per use.</p>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ─── State ──────────────────────────────────────────────
     const state = {
-      messages: [],  // { role: 'user'|'assistant', content: string }
+      messages: [],
       sending: false,
       interviewComplete: false
     };
@@ -865,17 +1475,46 @@
       interview: $('screen-interview'),
       loading: $('screen-loading'),
       report: $('screen-report'),
-      error: $('screen-error')
+      error: $('screen-error'),
+      tools: $('screen-tools'),
+      showcase: $('screen-showcase'),
+      pricing: $('screen-pricing')
     };
     const messagesEl = $('messages');
     const inputField = $('inputField');
     const sendBtn = $('sendBtn');
+    const headerNav = $('headerNav');
     const headerStatus = $('headerStatus');
+
+    // ─── Routing ─────────────────────────────────────────────
+    const STATIC_SCREENS = ['welcome', 'tools', 'showcase', 'pricing'];
+    const FLOW_SCREENS = ['interview', 'loading', 'report', 'error'];
+
+    function initRouter() {
+      window.addEventListener('hashchange', handleRoute);
+      handleRoute();
+    }
+
+    function handleRoute() {
+      const hash = window.location.hash.slice(1) || 'welcome';
+      if (STATIC_SCREENS.includes(hash)) {
+        showScreen(hash);
+      }
+    }
 
     // ─── Navigation ─────────────────────────────────────────
     function showScreen(name) {
       Object.values(screens).forEach(s => s.classList.remove('active'));
-      screens[name].classList.add('active');
+      if (screens[name]) screens[name].classList.add('active');
+
+      const isFlow = FLOW_SCREENS.includes(name);
+      headerNav.style.display = isFlow ? 'none' : 'flex';
+      headerStatus.style.display = isFlow ? 'flex' : 'none';
+
+      // Update active nav link
+      document.querySelectorAll('.nav-link:not(.nav-cta)').forEach(link => {
+        link.classList.toggle('active-link', link.getAttribute('href') === '#' + name);
+      });
 
       if (name === 'interview') {
         headerStatus.innerHTML = '<div class="status-dot"></div><span>Interview in progress</span>';
@@ -884,9 +1523,10 @@
         headerStatus.innerHTML = '<div class="spinner" style="width:16px;height:16px;border-width:2px;margin:0;"></div><span>Analysing...</span>';
       } else if (name === 'report') {
         headerStatus.innerHTML = '<span style="color:var(--success);">Report ready</span>';
-      } else {
-        headerStatus.innerHTML = '<div class="status-dot"></div><span>Ready</span>';
       }
+
+      // Scroll to top on page change
+      window.scrollTo(0, 0);
     }
 
     // ─── Messages ───────────────────────────────────────────
@@ -938,16 +1578,12 @@
     inputField.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        if (inputField.value.trim() && !state.sending) {
-          sendMessage();
-        }
+        if (inputField.value.trim() && !state.sending) sendMessage();
       }
     });
 
     sendBtn.addEventListener('click', () => {
-      if (inputField.value.trim() && !state.sending) {
-        sendMessage();
-      }
+      if (inputField.value.trim() && !state.sending) sendMessage();
     });
 
     // ─── Send message ───────────────────────────────────────
@@ -975,14 +1611,10 @@
         const data = await res.json();
         hideTyping();
 
-        // Check if interview is complete
         if (data.response.includes('[INTERVIEW_COMPLETE]')) {
           state.interviewComplete = true;
           const cleanResponse = data.response.replace('[INTERVIEW_COMPLETE]', '').trim();
-          if (cleanResponse) {
-            addMessage('assistant', cleanResponse);
-          }
-          // Automatically trigger report generation
+          if (cleanResponse) addMessage('assistant', cleanResponse);
           setTimeout(generateReport, 800);
         } else {
           addMessage('assistant', data.response);
@@ -1023,18 +1655,15 @@
     function renderReport(r) {
       const content = $('reportContent');
 
-      // Severity colour
       const sevColor = r.severity >= 7 ? '#c0392b' : r.severity >= 4 ? '#e67e22' : '#27ae60';
       const sevLabel = r.severity >= 7 ? 'High severity' : r.severity >= 4 ? 'Moderate' : 'Low severity';
 
-      // Commitment label
       const commitLabels = {
         exploring: 'Exploring the issue',
         considering: 'Actively considering options',
         ready_to_act: 'Ready to take action'
       };
 
-      // Category icons
       const catIcons = {
         research: '&#x1F50D;', building: '&#x1F6E0;', legal: '&#x2696;',
         financial: '&#x1F4B7;', community: '&#x1F91D;', learning: '&#x1F4DA;'
@@ -1042,9 +1671,14 @@
 
       let html = '';
 
-      // Summary
+      // 1. The Hook
+      if (r.one_line) {
+        html += `<div class="report-hook"><p>${escapeHtml(r.one_line)}</p></div>`;
+      }
+
+      // 2. Summary
       html += `
-        <div class="report-card" style="animation-delay:0.1s">
+        <div class="report-card">
           <h3><span class="icon">&#x1F4CB;</span> Summary</h3>
           <p>${escapeHtml(r.summary)}</p>
           <div style="display:flex; gap:1rem; margin-top:1rem; flex-wrap:wrap;">
@@ -1056,17 +1690,22 @@
           </div>
         </div>`;
 
-      // Core Issue
+      // 3. Reframe
+      if (r.reframe) {
+        html += `<div class="reframe-callout"><p>${escapeHtml(r.reframe)}</p></div>`;
+      }
+
+      // 4. Core Issue
       html += `
-        <div class="report-card" style="animation-delay:0.2s">
+        <div class="report-card">
           <h3><span class="icon">&#x1F3AF;</span> Core Issue</h3>
           <p>${escapeHtml(r.core_issue)}</p>
         </div>`;
 
-      // Constraints
+      // 5. Constraints
       if (r.constraints && r.constraints.length > 0) {
         html += `
-          <div class="report-card" style="animation-delay:0.3s">
+          <div class="report-card">
             <h3><span class="icon">&#x1F512;</span> Constraints</h3>
             <ul class="constraints-list">
               ${r.constraints.map(c => `<li>${escapeHtml(c)}</li>`).join('')}
@@ -1074,10 +1713,28 @@
           </div>`;
       }
 
-      // Pathways
+      // 6. Existing Landscape
+      if (r.existing_landscape && r.existing_landscape.length > 0) {
+        html += `
+          <div class="report-card">
+            <h3><span class="icon">&#x1F30D;</span> Who's Already Here</h3>
+            <p style="color:var(--text-light); margin-bottom:1rem;">These exist in or around your problem space. Knowing the landscape helps you decide whether to use, compete with, or work around them.</p>
+            <div class="landscape-grid">
+              ${r.existing_landscape.map(l => `
+                <div class="landscape-item">
+                  <h4>${l.url ? `<a href="${escapeHtml(l.url)}" target="_blank" rel="noopener">${escapeHtml(l.name)}</a>` : escapeHtml(l.name)}</h4>
+                  <p class="landscape-does">${escapeHtml(l.what_they_do)}</p>
+                  <p class="landscape-gap"><strong>The gap:</strong> ${escapeHtml(l.gap)}</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>`;
+      }
+
+      // 7. Pathways
       if (r.pathways && r.pathways.length > 0) {
         html += `
-          <div class="report-card" style="animation-delay:0.4s">
+          <div class="report-card">
             <h3><span class="icon">&#x1F6A4;</span> Pathways Forward</h3>
             <div class="pathways-grid">
               ${r.pathways.map(p => `
@@ -1091,16 +1748,45 @@
                   </div>
                   <p>${escapeHtml(p.description)}</p>
                   <div class="pathway-timeframe">${escapeHtml(p.timeframe)}</div>
+                  ${p.first_step ? `<div class="pathway-first-step"><strong>First move:</strong> ${escapeHtml(p.first_step)}</div>` : ''}
                 </div>
               `).join('')}
             </div>
           </div>`;
       }
 
-      // Next Actions
+      // 8. Creative Angles
+      if (r.creative_angles && r.creative_angles.length > 0) {
+        html += `
+          <div class="report-card">
+            <h3><span class="icon">&#x1F4A1;</span> Creative Angles</h3>
+            <p style="color:var(--text-light); margin-bottom:1rem;">Sideways thinking. Approaches you might not have considered.</p>
+            <div class="angles-list">
+              ${r.creative_angles.map(a => `
+                <div class="angle-item">
+                  <h4>${escapeHtml(a.idea)}</h4>
+                  <p>${escapeHtml(a.why)}</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>`;
+      }
+
+      // 9. What If
+      if (r.what_if && r.what_if.length > 0) {
+        html += `
+          <div class="report-card what-if-card">
+            <h3><span class="icon">&#x1F52E;</span> What If...</h3>
+            <div class="what-if-list">
+              ${r.what_if.map(q => `<div class="what-if-item"><p>${escapeHtml(q)}</p></div>`).join('')}
+            </div>
+          </div>`;
+      }
+
+      // 10. Next Actions
       if (r.next_actions && r.next_actions.length > 0) {
         html += `
-          <div class="report-card" style="animation-delay:0.5s">
+          <div class="report-card">
             <h3><span class="icon">&#x26A1;</span> Next Actions</h3>
             <ol class="actions-list">
               ${r.next_actions.map(a => `<li>${escapeHtml(a)}</li>`).join('')}
@@ -1108,10 +1794,10 @@
           </div>`;
       }
 
-      // Tools
+      // 11. Tools
       if (r.tools && r.tools.length > 0) {
         html += `
-          <div class="report-card" style="animation-delay:0.6s">
+          <div class="report-card">
             <h3><span class="icon">&#x1F9F0;</span> Tools & Resources</h3>
             <div class="tools-grid">
               ${r.tools.map(t => `
@@ -1120,7 +1806,10 @@
                   <div class="tool-info">
                     <h4>${escapeHtml(t.name)}</h4>
                     <p>${escapeHtml(t.description)}</p>
-                    <div class="tool-category">${escapeHtml(t.category || '')}</div>
+                    <div class="tool-meta">
+                      <span class="tool-category">${escapeHtml(t.category || '')}</span>
+                      ${t.cost ? `<span class="tool-cost-tag">${escapeHtml(t.cost)}</span>` : ''}
+                    </div>
                   </div>
                 </a>
               `).join('')}
@@ -1128,10 +1817,10 @@
           </div>`;
       }
 
-      // Pattern notice
+      // 12. Pattern
       if (r.pattern) {
         html += `
-          <div class="report-card" style="animation-delay:0.7s; padding:0; border:none; box-shadow:none;">
+          <div class="report-card" style="padding:0; border:none; box-shadow:none;">
             <div class="pattern-notice">
               <h4>Pattern Detected</h4>
               <p>${escapeHtml(r.pattern)}</p>
@@ -1143,40 +1832,39 @@
     }
 
     // ─── Start Interview ────────────────────────────────────
-    $('startBtn').addEventListener('click', async () => {
+    function startInterview() {
       showScreen('interview');
 
-      // Send initial message to get the first question
       state.sending = true;
       showTyping();
 
-      try {
-        const res = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            messages: [{ role: 'user', content: 'I\'d like to start the interview. Please ask me your first question.' }]
-          })
-        });
-
-        if (!res.ok) throw new Error('Failed to start');
-
-        const data = await res.json();
+      fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [{ role: 'user', content: 'I\'d like to start the interview. Please ask me your first question.' }]
+        })
+      })
+      .then(res => { if (!res.ok) throw new Error('Failed to start'); return res.json(); })
+      .then(data => {
         hideTyping();
-
-        // Store the hidden "start" message and the response
         state.messages.push({ role: 'user', content: 'I\'d like to start the interview. Please ask me your first question.' });
         state.messages.push({ role: 'assistant', content: data.response });
-
-        // Only show the assistant's response
         renderMessage('assistant', data.response);
-      } catch (err) {
+        state.sending = false;
+        inputField.focus();
+      })
+      .catch(() => {
         hideTyping();
         renderMessage('assistant', "I'm having trouble starting up. Please make sure the server is running with a valid API key, then refresh the page.");
-      }
+        state.sending = false;
+      });
+    }
 
-      state.sending = false;
-      inputField.focus();
+    $('startBtn').addEventListener('click', startInterview);
+    $('navStartBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      startInterview();
     });
 
     // ─── Restart ────────────────────────────────────────────
@@ -1187,6 +1875,7 @@
       messagesEl.innerHTML = '';
       inputField.value = '';
       $('reportContent').innerHTML = '';
+      window.location.hash = '#welcome';
       showScreen('welcome');
     });
 
@@ -1199,9 +1888,13 @@
         state.sending = false;
         state.interviewComplete = false;
         messagesEl.innerHTML = '';
+        window.location.hash = '#welcome';
         showScreen('welcome');
       }
     });
+
+    // ─── Init ───────────────────────────────────────────────
+    initRouter();
   </script>
 </body>
 </html>
