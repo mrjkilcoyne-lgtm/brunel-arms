@@ -1,414 +1,334 @@
 import React, { useState } from 'react';
 import {
-  Plus,
-  MapPin,
-  Users,
-  UserCircle,
-  ArrowRightLeft,
   Building2,
   ChevronRight,
+  Plus,
+  Search,
+  MapPin,
+  Users,
   Globe,
   MoreHorizontal,
-  Search,
-  CheckCircle2,
   Clock,
-  AlertCircle,
+  TrendingUp,
+  Mail,
+  ExternalLink,
+  Shield,
+  Activity,
+  CalendarDays,
 } from 'lucide-react';
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
-type ChapterStatus = 'active' | 'forming' | 'inactive';
+type ChapterStatus = 'active' | 'growing' | 'new' | 'inactive';
 
 interface Chapter {
   id: string;
   name: string;
-  region: string;
+  city: string;
   country: string;
-  location: string;
+  countryCode: string;
   memberCount: number;
-  admin: string;
+  adminName: string;
   adminEmail: string;
   status: ChapterStatus;
-  meetingSchedule: string;
   founded: string;
-  parentId?: string;
+  lastEvent: string;
+  growthRate: number;
+  upcomingEvents: number;
+  timezone: string;
 }
 
 // ---------------------------------------------------------------------------
-// Mock data
+// Mock Data
 // ---------------------------------------------------------------------------
 
-const MOCK_CHAPTERS: Chapter[] = [
+const mockChapters: Chapter[] = [
   {
     id: '1',
     name: 'London HQ',
-    region: 'United Kingdom',
-    country: 'GB',
-    location: 'London, England',
-    memberCount: 186,
-    admin: 'Eleanor Whitfield',
-    adminEmail: 'e.whitfield@brunel.co.uk',
+    city: 'London',
+    country: 'United Kingdom',
+    countryCode: 'GB',
+    memberCount: 487,
+    adminName: 'Eleanor Whitfield',
+    adminEmail: 'eleanor@canzuk.com',
     status: 'active',
-    meetingSchedule: 'Last Tuesday of each month',
-    founded: '2022-03-01',
+    founded: 'Jan 2024',
+    lastEvent: '8 Mar 2026',
+    growthRate: 12.4,
+    upcomingEvents: 3,
+    timezone: 'GMT+0',
   },
   {
     id: '2',
     name: 'Melbourne',
-    region: 'Australia',
-    country: 'AU',
-    location: 'Melbourne, Victoria',
-    memberCount: 94,
-    admin: 'Grace Nguyen',
-    adminEmail: 'g.nguyen@bigpond.com.au',
+    city: 'Melbourne',
+    country: 'Australia',
+    countryCode: 'AU',
+    memberCount: 312,
+    adminName: 'James Thornton',
+    adminEmail: 'james.t@canzuk.com',
     status: 'active',
-    meetingSchedule: 'First Wednesday of each month',
-    founded: '2023-01-15',
+    founded: 'Mar 2024',
+    lastEvent: '5 Mar 2026',
+    growthRate: 18.7,
+    upcomingEvents: 2,
+    timezone: 'AEST+11',
   },
   {
     id: '3',
     name: 'Toronto',
-    region: 'Canada',
-    country: 'CA',
-    location: 'Toronto, Ontario',
-    memberCount: 112,
-    admin: 'James Harrington',
-    adminEmail: 'j.harrington@canmail.ca',
-    status: 'active',
-    meetingSchedule: 'Second Thursday of each month',
-    founded: '2023-04-01',
+    city: 'Toronto',
+    country: 'Canada',
+    countryCode: 'CA',
+    memberCount: 198,
+    adminName: 'Priya Nair',
+    adminEmail: 'priya.n@canzuk.com',
+    status: 'growing',
+    founded: 'Jun 2024',
+    lastEvent: '1 Mar 2026',
+    growthRate: 24.3,
+    upcomingEvents: 1,
+    timezone: 'EST-5',
   },
   {
     id: '4',
     name: 'Auckland',
-    region: 'New Zealand',
-    country: 'NZ',
-    location: 'Auckland, North Island',
-    memberCount: 47,
-    admin: 'Amelia Blackwood',
-    adminEmail: 'a.blackwood@xtra.co.nz',
-    status: 'active',
-    meetingSchedule: 'Third Friday of each month',
-    founded: '2023-09-01',
+    city: 'Auckland',
+    country: 'New Zealand',
+    countryCode: 'NZ',
+    memberCount: 143,
+    adminName: 'Emma Ngata',
+    adminEmail: 'emma.n@canzuk.com',
+    status: 'growing',
+    founded: 'Sep 2024',
+    lastEvent: '28 Feb 2026',
+    growthRate: 31.2,
+    upcomingEvents: 2,
+    timezone: 'NZST+13',
   },
   {
     id: '5',
     name: 'Singapore',
-    region: 'Singapore',
-    country: 'SG',
-    location: 'Singapore',
-    memberCount: 38,
-    admin: 'Ravi Kapoor',
-    adminEmail: 'ravi.kapoor@sgmail.sg',
-    status: 'active',
-    meetingSchedule: 'First Monday of each month',
-    founded: '2024-02-01',
-  },
-  {
-    id: '6',
-    name: 'Vancouver',
-    region: 'Canada',
-    country: 'CA',
-    location: 'Vancouver, British Columbia',
-    memberCount: 12,
-    admin: 'TBD',
-    adminEmail: '',
-    status: 'forming',
-    meetingSchedule: 'TBD',
-    founded: '2026-01-15',
-    parentId: '3',
-  },
-  {
-    id: '7',
-    name: 'Sydney',
-    region: 'Australia',
-    country: 'AU',
-    location: 'Sydney, New South Wales',
-    memberCount: 0,
-    admin: 'TBD',
-    adminEmail: '',
-    status: 'inactive',
-    meetingSchedule: 'TBD',
-    founded: '2025-06-01',
-    parentId: '2',
+    city: 'Singapore',
+    country: 'Singapore',
+    countryCode: 'SG',
+    memberCount: 67,
+    adminName: 'David Tremblay',
+    adminEmail: 'david.t@canzuk.com',
+    status: 'new',
+    founded: 'Jan 2025',
+    lastEvent: '15 Feb 2026',
+    growthRate: 0,
+    upcomingEvents: 1,
+    timezone: 'SGT+8',
   },
 ];
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-const statusConfig: Record<ChapterStatus, { icon: React.ElementType; bg: string; text: string; label: string }> = {
-  active: { icon: CheckCircle2, bg: 'bg-emerald-50', text: 'text-emerald-700', label: 'Active' },
-  forming: { icon: Clock, bg: 'bg-amber-50', text: 'text-amber-700', label: 'Forming' },
-  inactive: { icon: AlertCircle, bg: 'bg-gray-100', text: 'text-gray-500', label: 'Inactive' },
+const statusConfig: Record<ChapterStatus, { label: string; bg: string; text: string; dot: string }> = {
+  active: { label: 'Active', bg: 'bg-emerald-50', text: 'text-emerald-700', dot: 'bg-emerald-500' },
+  growing: { label: 'Growing', bg: 'bg-blue-50', text: 'text-blue-700', dot: 'bg-blue-500' },
+  new: { label: 'New', bg: 'bg-purple-50', text: 'text-purple-700', dot: 'bg-purple-500' },
+  inactive: { label: 'Inactive', bg: 'bg-slate-100', text: 'text-slate-600', dot: 'bg-slate-400' },
 };
 
-const countryFlags: Record<string, string> = {
-  GB: '🇬🇧',
-  AU: '🇦🇺',
-  CA: '🇨🇦',
-  NZ: '🇳🇿',
-  SG: '🇸🇬',
+const flagEmoji: Record<string, string> = {
+  GB: '\u{1F1EC}\u{1F1E7}',
+  AU: '\u{1F1E6}\u{1F1FA}',
+  CA: '\u{1F1E8}\u{1F1E6}',
+  NZ: '\u{1F1F3}\u{1F1FF}',
+  SG: '\u{1F1F8}\u{1F1EC}',
 };
-
-const totalMembers = MOCK_CHAPTERS.reduce((s, c) => s + c.memberCount, 0);
 
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
 
 const Chapters: React.FC = () => {
-  const [search, setSearch] = useState('');
-  const [transferOpen, setTransferOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const filtered = search
-    ? MOCK_CHAPTERS.filter(
-        (c) =>
-          c.name.toLowerCase().includes(search.toLowerCase()) ||
-          c.region.toLowerCase().includes(search.toLowerCase()) ||
-          c.location.toLowerCase().includes(search.toLowerCase()),
-      )
-    : MOCK_CHAPTERS;
+  const filteredChapters = mockChapters.filter(
+    (ch) =>
+      ch.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      ch.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      ch.country.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
 
-  const primary = filtered.filter((c) => !c.parentId);
-  const sub = filtered.filter((c) => !!c.parentId);
+  const totalMembers = mockChapters.reduce((sum, ch) => sum + ch.memberCount, 0);
+  const totalUpcoming = mockChapters.reduce((sum, ch) => sum + ch.upcomingEvents, 0);
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Page Header */}
+      <div className="flex items-center text-sm text-ink-tertiary mb-1">
+        <span>Lodge</span>
+        <ChevronRight className="w-3.5 h-3.5 mx-1" />
+        <span className="text-ink-secondary font-medium">Chapters</span>
+      </div>
+
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Chapters</h1>
-          <p className="mt-1 text-sm text-gray-500">Manage regional branches and chapter administration</p>
-        </div>
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => setTransferOpen(true)}
-            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
-          >
-            <ArrowRightLeft className="h-4 w-4" />
-            Transfer Member
-          </button>
-          <button className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-emerald-700">
-            <Plus className="h-4 w-4" />
-            New Chapter
-          </button>
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-lodge/10">
+            <Globe className="h-5 w-5 text-lodge" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-ink">Chapter Management</h1>
+            <p className="text-sm text-ink-tertiary">
+              {mockChapters.length} chapters across the CANZUK network
+            </p>
+          </div>
         </div>
+        <button className="flex items-center gap-1.5 px-4 py-2 text-sm bg-lodge text-white rounded-lg hover:bg-lodge-dark font-medium shadow-sm">
+          <Plus className="w-4 h-4" />
+          New Chapter
+        </button>
       </div>
 
-      {/* Summary */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
-            <Building2 className="h-6 w-6" />
+      {/* KPI Summary */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs text-ink-tertiary font-medium uppercase tracking-wide">
+            <Building2 className="w-3.5 h-3.5" />
+            Total Chapters
           </div>
-          <div>
-            <p className="text-sm font-medium text-gray-500">Total Chapters</p>
-            <p className="text-2xl font-semibold text-gray-900">{MOCK_CHAPTERS.length}</p>
-          </div>
+          <p className="text-2xl font-bold text-ink mt-1">{mockChapters.length}</p>
+          <p className="text-xs text-ink-tertiary mt-1">Across {new Set(mockChapters.map((c) => c.country)).size} countries</p>
         </div>
-        <div className="flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-sky-50 text-sky-600">
-            <Users className="h-6 w-6" />
+        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs text-ink-tertiary font-medium uppercase tracking-wide">
+            <Users className="w-3.5 h-3.5" />
+            Total Members
           </div>
-          <div>
-            <p className="text-sm font-medium text-gray-500">Total Members</p>
-            <p className="text-2xl font-semibold text-gray-900">{totalMembers}</p>
-          </div>
+          <p className="text-2xl font-bold text-ink mt-1">{totalMembers.toLocaleString()}</p>
+          <p className="text-xs text-ink-tertiary mt-1">All chapters combined</p>
         </div>
-        <div className="flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
-            <Globe className="h-6 w-6" />
+        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs text-ink-tertiary font-medium uppercase tracking-wide">
+            <TrendingUp className="w-3.5 h-3.5" />
+            Avg Growth
           </div>
-          <div>
-            <p className="text-sm font-medium text-gray-500">Countries</p>
-            <p className="text-2xl font-semibold text-gray-900">{new Set(MOCK_CHAPTERS.map((c) => c.country)).size}</p>
+          <p className="text-2xl font-bold text-emerald-600 mt-1">
+            {(mockChapters.filter((c) => c.growthRate > 0).reduce((sum, c) => sum + c.growthRate, 0) /
+              mockChapters.filter((c) => c.growthRate > 0).length).toFixed(1)}%
+          </p>
+          <p className="text-xs text-ink-tertiary mt-1">Month-over-month</p>
+        </div>
+        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs text-ink-tertiary font-medium uppercase tracking-wide">
+            <CalendarDays className="w-3.5 h-3.5" />
+            Upcoming Events
           </div>
-        </div>
-      </div>
-
-      {/* Map placeholder */}
-      <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-        <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
-          <h2 className="text-base font-semibold text-gray-900">Chapter Locations</h2>
-        </div>
-        <div className="flex h-56 items-center justify-center bg-gray-50">
-          <div className="text-center">
-            <Globe className="mx-auto h-10 w-10 text-gray-300" />
-            <p className="mt-2 text-sm text-gray-400">Interactive map view</p>
-            <p className="text-xs text-gray-400">Map integration will render here</p>
-          </div>
-        </div>
-        {/* Inline location chips */}
-        <div className="flex flex-wrap gap-2 px-6 py-3 border-t border-gray-100">
-          {MOCK_CHAPTERS.filter((c) => c.status === 'active').map((c) => (
-            <span key={c.id} className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
-              <span>{countryFlags[c.country] || ''}</span>
-              {c.name}
-              <span className="text-emerald-500">&middot; {c.memberCount}</span>
-            </span>
-          ))}
+          <p className="text-2xl font-bold text-ink mt-1">{totalUpcoming}</p>
+          <p className="text-xs text-ink-tertiary mt-1">Next 30 days</p>
         </div>
       </div>
 
       {/* Search */}
       <div className="relative max-w-sm">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-faint" />
         <input
           type="text"
           placeholder="Search chapters..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-lg border border-gray-300 bg-white py-2 pl-10 pr-4 text-sm shadow-sm placeholder:text-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full pl-9 pr-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-lodge/30 focus:border-lodge"
         />
       </div>
 
-      {/* Chapter hierarchy */}
-      <div className="space-y-3">
-        <h2 className="text-base font-semibold text-gray-900">Chapter Hierarchy</h2>
+      {/* Chapter Cards */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {filteredChapters.map((chapter) => {
+          const status = statusConfig[chapter.status];
+          const flag = flagEmoji[chapter.countryCode] ?? '';
 
-        {/* Primary chapters */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {primary.map((c) => {
-            const st = statusConfig[c.status];
-            const children = sub.filter((s) => s.parentId === c.id);
-            return (
-              <div key={c.id} className="rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md">
-                <div className="p-5">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 text-lg">
-                        {countryFlags[c.country] || <Building2 className="h-5 w-5 text-emerald-700" />}
-                      </div>
-                      <div>
-                        <h3 className="text-base font-semibold text-gray-900">{c.name}</h3>
-                        <p className="text-xs text-gray-500">{c.location}</p>
-                      </div>
-                    </div>
-                    <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${st.bg} ${st.text}`}>
-                      <st.icon className="h-3 w-3" /> {st.label}
-                    </span>
+          return (
+            <div
+              key={chapter.id}
+              className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow"
+            >
+              {/* Header */}
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-lodge/10 text-2xl">
+                    {flag}
                   </div>
-
-                  <div className="mt-4 grid grid-cols-2 gap-3">
-                    <div>
-                      <p className="text-xs text-gray-400">Members</p>
-                      <p className="text-lg font-semibold text-gray-900">{c.memberCount}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-400">Admin</p>
-                      <p className="text-sm font-medium text-gray-900 truncate">{c.admin}</p>
+                  <div>
+                    <h3 className="text-base font-semibold text-ink">{chapter.name}</h3>
+                    <div className="flex items-center gap-1.5 text-xs text-ink-tertiary">
+                      <MapPin className="w-3 h-3" />
+                      {chapter.city}, {chapter.country}
                     </div>
                   </div>
-
-                  <div className="mt-3">
-                    <p className="text-xs text-gray-400">Meeting Schedule</p>
-                    <p className="text-sm text-gray-700">{c.meetingSchedule}</p>
-                  </div>
-
-                  {/* Sub-chapters */}
-                  {children.length > 0 && (
-                    <div className="mt-4 border-t border-gray-100 pt-3">
-                      <p className="text-xs font-medium uppercase tracking-wider text-gray-400 mb-2">Sub-Chapters</p>
-                      {children.map((sc) => {
-                        const sst = statusConfig[sc.status];
-                        return (
-                          <div key={sc.id} className="flex items-center gap-2 rounded-lg bg-gray-50 px-3 py-2 mb-1.5 last:mb-0">
-                            <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
-                            <span className="text-sm font-medium text-gray-800">{sc.name}</span>
-                            <span className={`ml-auto inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${sst.bg} ${sst.text}`}>
-                              {sst.label}
-                            </span>
-                            <span className="text-xs text-gray-500">{sc.memberCount} members</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
                 </div>
-
-                {/* Footer */}
-                <div className="flex items-center justify-between border-t border-gray-100 px-5 py-3">
-                  <p className="text-xs text-gray-400">
-                    Founded {new Date(c.founded).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}
-                  </p>
-                  <button className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
-                    <MoreHorizontal className="h-4 w-4" />
+                <div className="flex items-center gap-2">
+                  <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${status.bg} ${status.text}`}>
+                    <span className={`h-1.5 w-1.5 rounded-full ${status.dot}`} />
+                    {status.label}
+                  </span>
+                  <button className="text-ink-faint hover:text-ink-secondary">
+                    <MoreHorizontal className="w-4 h-4" />
                   </button>
                 </div>
               </div>
-            );
-          })}
-        </div>
+
+              {/* Stats */}
+              <div className="mt-5 grid grid-cols-3 gap-3">
+                <div className="rounded-lg bg-surface-secondary p-3 text-center">
+                  <p className="text-lg font-bold text-ink">{chapter.memberCount}</p>
+                  <p className="text-[10px] text-ink-tertiary uppercase tracking-wide">Members</p>
+                </div>
+                <div className="rounded-lg bg-surface-secondary p-3 text-center">
+                  <p className="text-lg font-bold text-emerald-600">
+                    {chapter.growthRate > 0 ? `+${chapter.growthRate}%` : '-'}
+                  </p>
+                  <p className="text-[10px] text-ink-tertiary uppercase tracking-wide">Growth</p>
+                </div>
+                <div className="rounded-lg bg-surface-secondary p-3 text-center">
+                  <p className="text-lg font-bold text-ink">{chapter.upcomingEvents}</p>
+                  <p className="text-[10px] text-ink-tertiary uppercase tracking-wide">Events</p>
+                </div>
+              </div>
+
+              {/* Admin & Details */}
+              <div className="mt-4 pt-4 border-t border-slate-100 space-y-2.5">
+                <div className="flex items-center gap-2">
+                  <Shield className="w-3.5 h-3.5 text-ink-faint" />
+                  <span className="text-xs text-ink-tertiary">Admin:</span>
+                  <span className="text-xs font-medium text-ink">{chapter.adminName}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Mail className="w-3.5 h-3.5 text-ink-faint" />
+                  <span className="text-xs text-ink-tertiary">{chapter.adminEmail}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="w-3.5 h-3.5 text-ink-faint" />
+                  <span className="text-xs text-ink-tertiary">Founded {chapter.founded}</span>
+                  <span className="text-xs text-ink-faint mx-1">&middot;</span>
+                  <span className="text-xs text-ink-tertiary">{chapter.timezone}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Activity className="w-3.5 h-3.5 text-ink-faint" />
+                  <span className="text-xs text-ink-tertiary">Last event: {chapter.lastEvent}</span>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="mt-4 pt-4 border-t border-slate-100 flex gap-2">
+                <button className="flex-1 flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 py-2 text-xs font-medium text-ink-secondary hover:bg-slate-50 transition-colors">
+                  <Users className="w-3.5 h-3.5" />
+                  View Members
+                </button>
+                <button className="flex-1 flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 py-2 text-xs font-medium text-ink-secondary hover:bg-slate-50 transition-colors">
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  Manage
+                </button>
+              </div>
+            </div>
+          );
+        })}
       </div>
-
-      {/* Transfer modal */}
-      {transferOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
-            <h2 className="text-lg font-semibold text-gray-900">Inter-Chapter Transfer</h2>
-            <p className="mt-1 text-sm text-gray-500">Move a member from one chapter to another.</p>
-
-            <div className="mt-5 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Member</label>
-                <input
-                  type="text"
-                  placeholder="Search member name or number..."
-                  className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm placeholder:text-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">From Chapter</label>
-                  <select className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500">
-                    <option value="">Select...</option>
-                    {MOCK_CHAPTERS.filter((c) => c.status === 'active').map((c) => (
-                      <option key={c.id} value={c.id}>{c.name}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">To Chapter</label>
-                  <select className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500">
-                    <option value="">Select...</option>
-                    {MOCK_CHAPTERS.filter((c) => c.status === 'active').map((c) => (
-                      <option key={c.id} value={c.id}>{c.name}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Reason (optional)</label>
-                <textarea
-                  rows={2}
-                  placeholder="e.g. Member relocating to Toronto..."
-                  className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm placeholder:text-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                />
-              </div>
-            </div>
-
-            <div className="mt-6 flex justify-end gap-3">
-              <button
-                onClick={() => setTransferOpen(false)}
-                className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => setTransferOpen(false)}
-                className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
-              >
-                <ArrowRightLeft className="h-4 w-4" />
-                Transfer
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
