@@ -1,391 +1,380 @@
 import React, { useState } from 'react';
 import {
+  MessageSquare,
+  ChevronRight,
   Plus,
+  Search,
   Send,
   Mail,
-  MessageSquare,
-  BarChart3,
-  MousePointerClick,
-  Eye,
-  Clock,
-  CheckCircle2,
-  FileText,
   Users,
-  ChevronRight,
-  Zap,
-  Layers,
-  Calendar,
-  Search,
-  Filter,
+  Eye,
+  MousePointerClick,
   MoreHorizontal,
+  CheckCircle2,
   Play,
   Pause,
+  FileText,
+  Sparkles,
+  UserCheck,
+  CalendarDays,
+  AlertTriangle,
+  ArrowRight,
+  BarChart3,
 } from 'lucide-react';
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
-type CampaignStatus = 'sent' | 'scheduled' | 'draft';
-type CampaignChannel = 'email' | 'sms';
+type CampaignStatus = 'sent' | 'scheduled' | 'draft' | 'active';
+type CampaignType = 'email' | 'sms' | 'push';
 
 interface Campaign {
   id: string;
   name: string;
-  channel: CampaignChannel;
+  type: CampaignType;
   status: CampaignStatus;
-  sentDate?: string;
-  scheduledDate?: string;
+  sentDate: string;
   recipients: number;
-  openRate?: number;
-  clickRate?: number;
-  segment: string;
+  openRate: number;
+  clickRate: number;
+  audience: string;
 }
 
-interface TemplateCard {
+interface Template {
   id: string;
   name: string;
   description: string;
-  category: string;
   icon: React.ElementType;
+  color: string;
+  uses: number;
 }
 
-interface DripStep {
-  id: string;
-  label: string;
-  delay: string;
-  channel: CampaignChannel;
-  status: 'completed' | 'active' | 'pending';
-}
-
-interface ScheduledItem {
+interface DripCampaign {
   id: string;
   name: string;
-  channel: CampaignChannel;
-  scheduledDate: string;
-  recipients: number;
+  steps: number;
+  enrolled: number;
+  completionRate: number;
+  status: 'active' | 'paused';
+  trigger: string;
 }
 
 // ---------------------------------------------------------------------------
-// Mock data
+// Mock Data
 // ---------------------------------------------------------------------------
 
-const MOCK_CAMPAIGNS: Campaign[] = [
-  { id: '1', name: 'March Newsletter', channel: 'email', status: 'sent', sentDate: '2026-03-01', recipients: 539, openRate: 47.2, clickRate: 12.8, segment: 'All Active Members' },
-  { id: '2', name: 'Renewal Reminder — Q1 Expiry', channel: 'email', status: 'sent', sentDate: '2026-02-15', recipients: 34, openRate: 68.1, clickRate: 41.2, segment: 'Expiring Q1' },
-  { id: '3', name: 'Conference Early Bird Offer', channel: 'email', status: 'sent', sentDate: '2026-02-01', recipients: 539, openRate: 52.4, clickRate: 18.9, segment: 'All Active Members' },
-  { id: '4', name: 'Lapsed Member Win-Back', channel: 'email', status: 'sent', sentDate: '2026-01-20', recipients: 28, openRate: 32.1, clickRate: 8.6, segment: 'Expired 6+ Months' },
-  { id: '5', name: 'SMS — Event Reminder (London Meetup)', channel: 'sms', status: 'sent', sentDate: '2026-03-10', recipients: 43, openRate: 94.0, clickRate: undefined, segment: 'London HQ Active' },
-  { id: '6', name: 'April Newsletter', channel: 'email', status: 'scheduled', scheduledDate: '2026-04-01', recipients: 545, segment: 'All Active Members' },
-  { id: '7', name: 'Student Scholarship Announcement', channel: 'email', status: 'draft', recipients: 63, segment: 'Student Members' },
+const mockCampaigns: Campaign[] = [
+  { id: '1', name: 'March Renewal Reminders', type: 'email', status: 'sent', sentDate: '10 Mar 2026', recipients: 234, openRate: 68.4, clickRate: 24.1, audience: 'Expiring this month' },
+  { id: '2', name: 'Welcome New Members Q1', type: 'email', status: 'sent', sentDate: '1 Mar 2026', recipients: 89, openRate: 82.1, clickRate: 45.3, audience: 'New joiners' },
+  { id: '3', name: 'Gold Tier Exclusive Invite', type: 'email', status: 'sent', sentDate: '25 Feb 2026', recipients: 156, openRate: 71.8, clickRate: 31.7, audience: 'Gold members' },
+  { id: '4', name: 'Lapsed Member Win-Back', type: 'email', status: 'active', sentDate: 'Ongoing', recipients: 312, openRate: 42.3, clickRate: 12.8, audience: 'Expired 30-90 days' },
+  { id: '5', name: 'Spring Event Announcement', type: 'email', status: 'scheduled', sentDate: '15 Mar 2026', recipients: 1243, openRate: 0, clickRate: 0, audience: 'All active members' },
+  { id: '6', name: 'Renewal SMS Nudge', type: 'sms', status: 'sent', sentDate: '8 Mar 2026', recipients: 67, openRate: 94.2, clickRate: 18.5, audience: 'Expiring in 7 days' },
+  { id: '7', name: 'Birthday Rewards', type: 'email', status: 'draft', sentDate: '-', recipients: 0, openRate: 0, clickRate: 0, audience: 'March birthdays' },
 ];
 
-const MOCK_TEMPLATES: TemplateCard[] = [
-  { id: '1', name: 'Welcome', description: 'Onboarding email sent when a new member joins.', category: 'Lifecycle', icon: CheckCircle2 },
-  { id: '2', name: 'Renewal Reminder', description: 'Sent 30/14/7 days before membership expiry.', category: 'Lifecycle', icon: Clock },
-  { id: '3', name: 'Expired Notice', description: 'Notification that membership has lapsed.', category: 'Lifecycle', icon: Mail },
-  { id: '4', name: 'Thank You', description: 'Post-event or post-renewal appreciation.', category: 'Engagement', icon: FileText },
-  { id: '5', name: 'Event Invitation', description: 'Invitation to upcoming lodge events.', category: 'Events', icon: Calendar },
-  { id: '6', name: 'Custom', description: 'Start from a blank canvas.', category: 'Other', icon: Layers },
+const mockTemplates: Template[] = [
+  { id: '1', name: 'Welcome', description: 'New member welcome email with onboarding steps', icon: UserCheck, color: 'bg-emerald-50 text-emerald-600', uses: 89 },
+  { id: '2', name: 'Renewal', description: 'Membership renewal reminder with quick-pay link', icon: CalendarDays, color: 'bg-blue-50 text-blue-600', uses: 234 },
+  { id: '3', name: 'Expired', description: 'Win-back message for lapsed members with offer', icon: AlertTriangle, color: 'bg-red-50 text-red-600', uses: 67 },
+  { id: '4', name: 'Event', description: 'Event invitation with RSVP and event details', icon: Sparkles, color: 'bg-purple-50 text-purple-600', uses: 156 },
+  { id: '5', name: 'Custom', description: 'Blank template for custom communications', icon: FileText, color: 'bg-slate-100 text-slate-600', uses: 42 },
 ];
 
-const DRIP_STEPS: DripStep[] = [
-  { id: '1', label: 'Welcome Email', delay: 'Immediate', channel: 'email', status: 'completed' },
-  { id: '2', label: 'Getting Started Guide', delay: '+3 days', channel: 'email', status: 'completed' },
-  { id: '3', label: 'Community Introduction', delay: '+7 days', channel: 'email', status: 'active' },
-  { id: '4', label: 'First Event Nudge', delay: '+14 days', channel: 'email', status: 'pending' },
-  { id: '5', label: 'Feedback SMS', delay: '+30 days', channel: 'sms', status: 'pending' },
+const mockDripCampaigns: DripCampaign[] = [
+  { id: '1', name: 'New Member Onboarding', steps: 5, enrolled: 89, completionRate: 76.4, status: 'active', trigger: 'Member signup' },
+  { id: '2', name: 'Renewal Countdown', steps: 3, enrolled: 234, completionRate: 68.2, status: 'active', trigger: '30 days before expiry' },
+  { id: '3', name: 'Win-Back Sequence', steps: 4, enrolled: 67, completionRate: 32.8, status: 'active', trigger: '7 days after expiry' },
+  { id: '4', name: 'Tier Upgrade Path', steps: 6, enrolled: 156, completionRate: 45.1, status: 'paused', trigger: 'Points threshold reached' },
 ];
 
-const MOCK_QUEUE: ScheduledItem[] = [
-  { id: '1', name: 'April Newsletter', channel: 'email', scheduledDate: '2026-04-01T09:00:00', recipients: 545 },
-  { id: '2', name: 'Renewal Reminder — Q2 Expiry', channel: 'email', scheduledDate: '2026-04-15T10:00:00', recipients: 41 },
-  { id: '3', name: 'Melbourne Dinner RSVP', channel: 'sms', scheduledDate: '2026-04-16T11:00:00', recipients: 38 },
-];
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-const fmtDate = (d: string) => new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-const fmtDateTime = (d: string) => {
-  const dt = new Date(d);
-  return dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) + ' at ' + dt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+const statusConfig: Record<CampaignStatus, { label: string; bg: string; text: string; dot: string }> = {
+  sent: { label: 'Sent', bg: 'bg-emerald-50', text: 'text-emerald-700', dot: 'bg-emerald-500' },
+  scheduled: { label: 'Scheduled', bg: 'bg-blue-50', text: 'text-blue-700', dot: 'bg-blue-500' },
+  draft: { label: 'Draft', bg: 'bg-slate-100', text: 'text-slate-600', dot: 'bg-slate-400' },
+  active: { label: 'Active', bg: 'bg-amber-50', text: 'text-amber-700', dot: 'bg-amber-500' },
 };
 
-const statusBadge = (s: CampaignStatus) => {
-  const map: Record<CampaignStatus, { bg: string; text: string; label: string }> = {
-    sent: { bg: 'bg-emerald-50', text: 'text-emerald-700', label: 'Sent' },
-    scheduled: { bg: 'bg-sky-50', text: 'text-sky-700', label: 'Scheduled' },
-    draft: { bg: 'bg-gray-100', text: 'text-gray-600', label: 'Draft' },
-  };
-  const c = map[s];
-  return <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${c.bg} ${c.text}`}>{c.label}</span>;
+const typeIcons: Record<CampaignType, React.ElementType> = {
+  email: Mail,
+  sms: MessageSquare,
+  push: Send,
 };
-
-const channelIcon = (ch: CampaignChannel) =>
-  ch === 'email' ? <Mail className="h-4 w-4 text-emerald-600" /> : <MessageSquare className="h-4 w-4 text-violet-600" />;
 
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
 
 const Communications: React.FC = () => {
-  const [tab, setTab] = useState<'campaigns' | 'templates' | 'drip' | 'queue'>('campaigns');
-  const [search, setSearch] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState<'campaigns' | 'templates' | 'drip'>('campaigns');
 
-  const filteredCampaigns = search
-    ? MOCK_CAMPAIGNS.filter((c) => c.name.toLowerCase().includes(search.toLowerCase()))
-    : MOCK_CAMPAIGNS;
+  const filteredCampaigns = mockCampaigns.filter(
+    (c) =>
+      c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.audience.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+
+  const totalSent = mockCampaigns.filter((c) => c.status === 'sent').reduce((sum, c) => sum + c.recipients, 0);
+  const avgOpenRate =
+    mockCampaigns.filter((c) => c.openRate > 0).reduce((sum, c) => sum + c.openRate, 0) /
+    mockCampaigns.filter((c) => c.openRate > 0).length;
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Page Header */}
+      <div className="flex items-center text-sm text-ink-tertiary mb-1">
+        <span>Lodge</span>
+        <ChevronRight className="w-3.5 h-3.5 mx-1" />
+        <span className="text-ink-secondary font-medium">Communications</span>
+      </div>
+
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Communications</h1>
-          <p className="mt-1 text-sm text-gray-500">Email and SMS campaigns, templates, and automation</p>
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-lodge/10">
+            <Mail className="h-5 w-5 text-lodge" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-ink">Communications</h1>
+            <p className="text-sm text-ink-tertiary">Manage campaigns, templates, and drip sequences</p>
+          </div>
         </div>
-        <button className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-emerald-700">
-          <Plus className="h-4 w-4" />
+        <button className="flex items-center gap-1.5 px-4 py-2 text-sm bg-lodge text-white rounded-lg hover:bg-lodge-dark font-medium shadow-sm">
+          <Plus className="w-4 h-4" />
           New Campaign
         </button>
       </div>
 
-      {/* Tabs */}
-      <div className="flex items-center gap-6 border-b border-gray-200">
-        {([
-          { key: 'campaigns', label: 'Campaigns' },
-          { key: 'templates', label: 'Templates' },
-          { key: 'drip', label: 'Drip Sequences' },
-          { key: 'queue', label: 'Schedule Queue' },
-        ] as const).map((t) => (
-          <button
-            key={t.key}
-            onClick={() => setTab(t.key)}
-            className={`pb-2.5 text-sm font-medium transition-colors ${
-              tab === t.key
-                ? 'border-b-2 border-emerald-600 text-emerald-700'
-                : 'text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs text-ink-tertiary font-medium uppercase tracking-wide">
+            <Send className="w-3.5 h-3.5" />
+            Total Sent
+          </div>
+          <p className="text-2xl font-bold text-ink mt-1">{totalSent.toLocaleString()}</p>
+          <p className="text-xs text-ink-tertiary mt-1">This month</p>
+        </div>
+        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs text-ink-tertiary font-medium uppercase tracking-wide">
+            <Eye className="w-3.5 h-3.5" />
+            Avg Open Rate
+          </div>
+          <p className="text-2xl font-bold text-emerald-600 mt-1">{avgOpenRate.toFixed(1)}%</p>
+          <p className="text-xs text-ink-tertiary mt-1">Across all campaigns</p>
+        </div>
+        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs text-ink-tertiary font-medium uppercase tracking-wide">
+            <MousePointerClick className="w-3.5 h-3.5" />
+            Avg Click Rate
+          </div>
+          <p className="text-2xl font-bold text-blue-600 mt-1">
+            {(mockCampaigns.filter((c) => c.clickRate > 0).reduce((sum, c) => sum + c.clickRate, 0) /
+              mockCampaigns.filter((c) => c.clickRate > 0).length).toFixed(1)}%
+          </p>
+          <p className="text-xs text-ink-tertiary mt-1">Across all campaigns</p>
+        </div>
+        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs text-ink-tertiary font-medium uppercase tracking-wide">
+            <BarChart3 className="w-3.5 h-3.5" />
+            Active Drips
+          </div>
+          <p className="text-2xl font-bold text-ink mt-1">
+            {mockDripCampaigns.filter((d) => d.status === 'active').length}
+          </p>
+          <p className="text-xs text-ink-tertiary mt-1">Running sequences</p>
+        </div>
       </div>
 
-      {/* ----------------------------------------------------------------- */}
-      {/* Campaigns Tab */}
-      {/* ----------------------------------------------------------------- */}
-      {tab === 'campaigns' && (
+      {/* Tabs */}
+      <div className="border-b border-slate-200">
+        <div className="flex gap-6">
+          {(['campaigns', 'templates', 'drip'] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`pb-3 text-sm font-medium capitalize transition-colors border-b-2 ${
+                activeTab === tab
+                  ? 'border-lodge text-lodge'
+                  : 'border-transparent text-ink-tertiary hover:text-ink-secondary'
+              }`}
+            >
+              {tab === 'drip' ? 'Drip Campaigns' : tab}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Campaign List */}
+      {activeTab === 'campaigns' && (
         <div className="space-y-4">
-          {/* Search */}
           <div className="relative max-w-sm">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-faint" />
             <input
               type="text"
               placeholder="Search campaigns..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 bg-white py-2 pl-10 pr-4 text-sm shadow-sm placeholder:text-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-9 pr-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-lodge/30 focus:border-lodge"
             />
           </div>
 
-          {/* Table */}
-          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Campaign</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Date</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">Recipients</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">Open Rate</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">Click Rate</th>
-                  <th className="w-10 px-6 py-3" />
+          <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="border-b border-slate-200 bg-slate-50">
+                  <th className="px-6 py-3 text-xs font-medium text-ink-tertiary uppercase tracking-wide">Campaign</th>
+                  <th className="px-6 py-3 text-xs font-medium text-ink-tertiary uppercase tracking-wide">Type</th>
+                  <th className="px-6 py-3 text-xs font-medium text-ink-tertiary uppercase tracking-wide">Sent</th>
+                  <th className="px-6 py-3 text-xs font-medium text-ink-tertiary uppercase tracking-wide">Recipients</th>
+                  <th className="px-6 py-3 text-xs font-medium text-ink-tertiary uppercase tracking-wide">Open Rate</th>
+                  <th className="px-6 py-3 text-xs font-medium text-ink-tertiary uppercase tracking-wide">Click Rate</th>
+                  <th className="px-6 py-3 text-xs font-medium text-ink-tertiary uppercase tracking-wide">Status</th>
+                  <th className="px-6 py-3"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
-                {filteredCampaigns.map((c) => (
-                  <tr key={c.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-3">
-                      <div className="flex items-center gap-3">
-                        {channelIcon(c.channel)}
-                        <div>
-                          <p className="text-sm font-medium text-gray-900">{c.name}</p>
-                          <p className="text-xs text-gray-500">{c.segment}</p>
+              <tbody className="divide-y divide-slate-100">
+                {filteredCampaigns.map((campaign) => {
+                  const status = statusConfig[campaign.status];
+                  const TypeIcon = typeIcons[campaign.type];
+
+                  return (
+                    <tr key={campaign.id} className="hover:bg-slate-50 transition-colors">
+                      <td className="px-6 py-4">
+                        <p className="text-sm font-medium text-ink">{campaign.name}</p>
+                        <p className="text-xs text-ink-tertiary">{campaign.audience}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-1.5">
+                          <TypeIcon className="w-3.5 h-3.5 text-ink-tertiary" />
+                          <span className="text-sm text-ink-secondary capitalize">{campaign.type}</span>
                         </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-3">{statusBadge(c.status)}</td>
-                    <td className="px-6 py-3 text-sm text-gray-500">
-                      {c.sentDate ? fmtDate(c.sentDate) : c.scheduledDate ? fmtDate(c.scheduledDate) : '--'}
-                    </td>
-                    <td className="px-6 py-3 text-sm text-gray-900 text-right">{c.recipients.toLocaleString()}</td>
-                    <td className="px-6 py-3 text-sm text-right">
-                      {c.openRate !== undefined ? (
-                        <span className="inline-flex items-center gap-1 text-gray-900">
-                          <Eye className="h-3 w-3 text-gray-400" /> {c.openRate}%
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-sm text-ink-secondary">{campaign.sentDate}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-sm text-ink">{campaign.recipients > 0 ? campaign.recipients.toLocaleString() : '-'}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-sm text-ink">{campaign.openRate > 0 ? `${campaign.openRate}%` : '-'}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-sm text-ink">{campaign.clickRate > 0 ? `${campaign.clickRate}%` : '-'}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${status.bg} ${status.text}`}>
+                          <span className={`h-1.5 w-1.5 rounded-full ${status.dot}`} />
+                          {status.label}
                         </span>
-                      ) : (
-                        <span className="text-gray-400">--</span>
-                      )}
-                    </td>
-                    <td className="px-6 py-3 text-sm text-right">
-                      {c.clickRate !== undefined ? (
-                        <span className="inline-flex items-center gap-1 text-gray-900">
-                          <MousePointerClick className="h-3 w-3 text-gray-400" /> {c.clickRate}%
-                        </span>
-                      ) : (
-                        <span className="text-gray-400">--</span>
-                      )}
-                    </td>
-                    <td className="px-6 py-3 text-right">
-                      <button className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td className="px-6 py-4">
+                        <button className="text-ink-faint hover:text-ink-secondary">
+                          <MoreHorizontal className="w-4 h-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
-
-          {/* Segment builder preview */}
-          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-            <h3 className="text-sm font-semibold text-gray-900 mb-3">Segment Builder Preview</h3>
-            <div className="flex flex-wrap items-center gap-2 text-sm">
-              <span className="rounded-lg bg-emerald-50 px-3 py-1.5 font-medium text-emerald-700">Status = Active</span>
-              <span className="text-gray-400 font-medium">AND</span>
-              <span className="rounded-lg bg-sky-50 px-3 py-1.5 font-medium text-sky-700">Chapter = London HQ</span>
-              <span className="text-gray-400 font-medium">AND</span>
-              <span className="rounded-lg bg-violet-50 px-3 py-1.5 font-medium text-violet-700">Type = Individual OR Family</span>
-              <ChevronRight className="h-4 w-4 text-gray-300" />
-              <span className="rounded-lg bg-gray-100 px-3 py-1.5 font-semibold text-gray-800">
-                <Users className="mr-1 inline h-3.5 w-3.5" />
-                214 members matched
-              </span>
-            </div>
-          </div>
         </div>
       )}
 
-      {/* ----------------------------------------------------------------- */}
-      {/* Templates Tab */}
-      {/* ----------------------------------------------------------------- */}
-      {tab === 'templates' && (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {MOCK_TEMPLATES.map((t) => (
-            <div key={t.id} className="flex flex-col rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
-                  <t.icon className="h-5 w-5" />
+      {/* Template Gallery */}
+      {activeTab === 'templates' && (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          {mockTemplates.map((template) => {
+            const Icon = template.icon;
+            return (
+              <div
+                key={template.id}
+                className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer group"
+              >
+                <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${template.color} mb-4`}>
+                  <Icon className="h-6 w-6" />
                 </div>
-                <div>
-                  <h4 className="text-sm font-semibold text-gray-900">{t.name}</h4>
-                  <span className="text-xs text-gray-400">{t.category}</span>
+                <h3 className="text-sm font-semibold text-ink">{template.name}</h3>
+                <p className="text-xs text-ink-tertiary mt-1 line-clamp-2">{template.description}</p>
+                <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between">
+                  <span className="text-xs text-ink-faint">{template.uses} uses</span>
+                  <button className="text-xs font-medium text-lodge opacity-0 group-hover:opacity-100 transition-opacity">
+                    Use template
+                  </button>
                 </div>
               </div>
-              <p className="flex-1 text-sm text-gray-500">{t.description}</p>
-              <div className="mt-4 flex gap-2">
-                <button className="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50">
-                  Preview
-                </button>
-                <button className="flex-1 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-emerald-700">
-                  Use Template
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
-      {/* ----------------------------------------------------------------- */}
-      {/* Drip Sequences Tab */}
-      {/* ----------------------------------------------------------------- */}
-      {tab === 'drip' && (
+      {/* Drip Campaigns */}
+      {activeTab === 'drip' && (
         <div className="space-y-4">
-          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className="text-base font-semibold text-gray-900">New Member Onboarding</h3>
-                <p className="text-sm text-gray-500">Automated welcome sequence for newly joined members</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
-                  <Play className="h-3 w-3" /> Active
-                </span>
-              </div>
-            </div>
-
-            {/* Drip visualizer */}
-            <div className="relative">
-              {DRIP_STEPS.map((step, i) => (
-                <div key={step.id} className="flex items-start gap-4 mb-0">
-                  {/* Timeline */}
-                  <div className="flex flex-col items-center">
-                    <div
-                      className={`flex h-8 w-8 items-center justify-center rounded-full border-2 ${
-                        step.status === 'completed'
-                          ? 'border-emerald-500 bg-emerald-500 text-white'
-                          : step.status === 'active'
-                          ? 'border-emerald-500 bg-white text-emerald-500'
-                          : 'border-gray-300 bg-white text-gray-400'
-                      }`}
-                    >
-                      {step.status === 'completed' ? (
-                        <CheckCircle2 className="h-4 w-4" />
-                      ) : step.channel === 'email' ? (
-                        <Mail className="h-3.5 w-3.5" />
-                      ) : (
-                        <MessageSquare className="h-3.5 w-3.5" />
-                      )}
+          {mockDripCampaigns.map((drip) => (
+            <div
+              key={drip.id}
+              className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-lodge/10">
+                    <Sparkles className="h-5 w-5 text-lodge" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-base font-semibold text-ink">{drip.name}</h3>
+                      <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                        drip.status === 'active'
+                          ? 'bg-emerald-50 text-emerald-700'
+                          : 'bg-amber-50 text-amber-700'
+                      }`}>
+                        {drip.status === 'active' ? (
+                          <Play className="w-3 h-3" />
+                        ) : (
+                          <Pause className="w-3 h-3" />
+                        )}
+                        {drip.status === 'active' ? 'Active' : 'Paused'}
+                      </span>
                     </div>
-                    {i < DRIP_STEPS.length - 1 && (
-                      <div className={`h-10 w-0.5 ${step.status === 'completed' ? 'bg-emerald-300' : 'bg-gray-200'}`} />
-                    )}
-                  </div>
-                  {/* Content */}
-                  <div className="pt-1 pb-6">
-                    <p className="text-sm font-medium text-gray-900">{step.label}</p>
-                    <p className="text-xs text-gray-500">{step.delay} &middot; {step.channel.toUpperCase()}</p>
+                    <p className="text-xs text-ink-tertiary mt-0.5">Trigger: {drip.trigger}</p>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+                <button className="text-ink-faint hover:text-ink-secondary">
+                  <MoreHorizontal className="w-4 h-4" />
+                </button>
+              </div>
 
-      {/* ----------------------------------------------------------------- */}
-      {/* Schedule Queue Tab */}
-      {/* ----------------------------------------------------------------- */}
-      {tab === 'queue' && (
-        <div className="space-y-4">
-          {MOCK_QUEUE.length === 0 && (
-            <div className="py-12 text-center text-sm text-gray-500">No scheduled items.</div>
-          )}
-          {MOCK_QUEUE.map((q) => (
-            <div key={q.id} className="flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-50 text-sky-600">
-                <Clock className="h-5 w-5" />
+              {/* Step visualisation */}
+              <div className="mt-4 ml-13 flex items-center gap-2">
+                {Array.from({ length: drip.steps }).map((_, i) => (
+                  <React.Fragment key={i}>
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-lodge/10 text-lodge text-xs font-semibold">
+                      {i + 1}
+                    </div>
+                    {i < drip.steps - 1 && (
+                      <ArrowRight className="w-4 h-4 text-ink-faint" />
+                    )}
+                  </React.Fragment>
+                ))}
               </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  {channelIcon(q.channel)}
-                  <p className="text-sm font-medium text-gray-900 truncate">{q.name}</p>
-                </div>
-                <p className="text-xs text-gray-500 mt-0.5">
-                  Scheduled for {fmtDateTime(q.scheduledDate)} &middot; {q.recipients} recipients
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <button className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50">
-                  Edit
-                </button>
-                <button className="rounded-lg border border-red-200 bg-white px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50">
-                  Cancel
-                </button>
+
+              {/* Stats */}
+              <div className="mt-4 ml-13 flex items-center gap-6 text-xs text-ink-tertiary">
+                <span className="flex items-center gap-1">
+                  <Users className="w-3.5 h-3.5" />
+                  {drip.enrolled} enrolled
+                </span>
+                <span className="flex items-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  {drip.completionRate}% completion
+                </span>
+                <span className="flex items-center gap-1">
+                  <Mail className="w-3.5 h-3.5" />
+                  {drip.steps} steps
+                </span>
               </div>
             </div>
           ))}
