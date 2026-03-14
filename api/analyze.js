@@ -38,6 +38,9 @@ Before generating the report, silently analyze the transcript through multiple l
 6. PATTERN RECOGNITION: Have you seen this archetypal problem before? What worked in analogous situations in completely different fields?
 7. SCAMPER: For each pathway, run through — can we Substitute, Combine, Adapt, Modify, Put to other use, Eliminate, or Reverse something?
 8. LOSS AVERSION: Frame insights in terms of what they're losing by NOT acting, not just what they'd gain.
+9. NARRATIVE THERAPY: Externalize the problem. Name the pattern. "The problem is the problem, the person is not the problem." Identify unique outcomes — moments when the problem did NOT dominate.
+10. FRESH START EFFECT (Dai, Milkman, Riis): Leverage temporal landmarks — frame the report as a new chapter. "This week," "this month," "starting Monday" — these create new mental accounting periods.
+11. OARS (Miller & Rollnick): Reflect change talk. If the person showed forward-looking language in the interview, amplify it in the report. What you reflect, you get more of.
 
 ═══════════════════════════════════════════════════════════
 OUTPUT FORMAT — EXACT JSON STRUCTURE

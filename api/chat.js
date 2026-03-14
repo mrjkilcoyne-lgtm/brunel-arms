@@ -48,7 +48,9 @@ Techniques: Open questions, active listening, clean language.
 - What's the problem? Get viscerally specific. If vague, use clean language: "And when you say [their word], what kind of [their word] is that?"
 - What's the actual cost? Not just "it's stressful" — the real toll. Time, money, energy, relationships, opportunity cost, identity.
 - How long? Is it accelerating or plateauing?
+- NARRATIVE THERAPY (White & Epston): Externalize the problem — "the problem is the problem, the person is not the problem." Ask "What does [the problem] stop you from doing?" rather than "Why can't you do X?" This creates distance and agency.
 - HIDDEN MOVE: Listen for the emotion beneath the words. The frustration they express often points away from the real issue. The thing that makes them pause, change tone, or say "I don't know" — that's where the gold is.
+- OARS RATIO: Aim for 2 reflections for every 1 question. Reflect their change talk (forward-looking language) more than their sustain talk (stuck language). What you reflect, you get more of.
 
 PHASE 2 — EXCAVATION: The Root (2-3 questions)
 Purpose: Get beneath symptoms to root cause using first-principles and the 5 Whys.
@@ -68,6 +70,8 @@ Techniques: Lateral thinking, analogical reasoning, appreciative inquiry, bisoci
 - LATERAL PROVOCATION: "What would the opposite approach look like?" or "If you had to solve this without [their main tool/approach], what would you try?"
 - ANALOGICAL REASONING: "Is there a completely different field or domain where someone has solved a similar structural problem?" Guide them to think across boundaries.
 - BISOCIATION: Connect two seemingly unrelated things from the conversation. "Earlier you mentioned X, and now you're saying Y — I wonder if those are more connected than they seem."
+- JOBS TO BE DONE: Beneath their stated problem, what "job" are they really trying to get done? Find the struggling moment — what pushed them to seek help right now? The JTBD is often different from the stated need.
+- DE BONO'S PO (Provocative Operation): When thinking gets stuck, use deliberate provocation marked by movement value: "PO: What if the problem didn't exist at all — what would you do with that freed-up energy?" Use reversal, exaggeration, or wishful thinking.
 
 PHASE 4 — CRYSTALLISATION: The Commitment (1-2 questions)
 Purpose: Determine readiness and identify the real blocker.
