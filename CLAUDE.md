@@ -1,41 +1,51 @@
-# Brunel Engine
+# The Brunel Engine v2.0
 
-AI-powered structured interview and analysis platform. Users go through a conversational interview about their problem, then receive a detailed actionable report.
+AI-powered structured interview and insight platform. Combines Socratic questioning, first-principles thinking, lateral provocation, and behavioral economics to help people transform frustrations into breakthrough insight.
 
-## Tech Stack
+## Architecture
 
-- **Backend**: Node.js + Express
-- **Frontend**: Vanilla HTML/CSS/JS (single-page app in `public/index.html`)
-- **AI**: Anthropic Claude API (`@anthropic-ai/sdk`)
-- **Deployment**: Vercel (serverless functions in `api/`)
+**Backend** (Node.js + Express, deployed on Vercel):
+- `server.js` — Express server for local dev
+- `api/chat.js` — Interview conversation (Vercel function)
+- `api/analyze.js` — Report generation (Vercel function)
+- `api/health.js` — Health check
 
-## Project Structure
+**Mobile App** (React Native + Expo):
+- `mobile/` — Art Deco themed Android/iOS app
+- `mobile/src/theme/` — Design system (colors, typography, spacing)
+- `mobile/src/components/` — Reusable Art Deco UI components
+- `mobile/src/screens/` — Splash, Home, Interview, Report screens
+- `mobile/src/services/` — API communication layer
 
-```
-server.js           # Express server (local dev) - interview + analysis endpoints
-api/chat.js         # Vercel function: interview conversation
-api/analyze.js      # Vercel function: report generation from transcript
-api/health.js       # Vercel function: health check
-public/index.html   # Complete frontend SPA (embedded CSS/JS)
-```
+**Web Frontend**: `public/index.html` — Original web SPA
 
 ## Development
 
 ```bash
-npm install
-cp .env.example .env  # Add your ANTHROPIC_API_KEY
-npm run dev            # Starts with --watch on port 3000
+# Backend
+npm install && cp .env.example .env  # Add ANTHROPIC_API_KEY
+npm run dev                          # Port 3000
+
+# Mobile
+cd mobile && npm install
+npx expo start --android
 ```
 
-## Key Concepts
+## Interview Methodology
 
-- **Interview flow**: 3 phases (Discovery, Exploration, Commitment), 6-10 exchanges, one question at a time
-- **Report output**: JSON with pathways (Quick Win, Structural Fix, Adaptation), creative angles, what-if questions, tools, next actions
-- **Chat endpoint** (`/api/chat`): Sends message history, returns single Claude response (500 token limit)
-- **Analyze endpoint** (`/api/analyze`): Sends full transcript, returns structured JSON report (4000 token limit)
+v2.0 interview uses four phases built on research:
+1. **Discovery** — Surface problem + psychological safety (clean language, active listening)
+2. **Excavation** — Root cause via 5 Whys + first principles + assumption challenging
+3. **Expansion** — Widen possibility space via appreciative inquiry, lateral thinking, bisociation
+4. **Crystallisation** — Readiness via motivational interviewing + mental contrasting (WOOP)
+
+## Analysis Frameworks
+
+Reports apply: First Principles, Jobs to be Done, Systems Thinking, Inversion (Munger), SCAMPER, TRIZ, Bisociation (Koestler), Loss Aversion framing, Implementation Intentions (Gollwitzer).
+
+## Key Config
+
 - Model: `claude-sonnet-4-20250514`
-
-## Environment Variables
-
-- `ANTHROPIC_API_KEY` - Required. Get from https://console.anthropic.com/
-- `PORT` - Optional. Defaults to 3000.
+- Interview: 600 token limit, 8-12 exchanges
+- Analysis: 6000 token limit, structured JSON with 4 pathways + creative angles + provocations
+- `ANTHROPIC_API_KEY` required, `PORT` optional (default 3000)
