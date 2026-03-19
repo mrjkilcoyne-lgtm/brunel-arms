@@ -1567,6 +1567,17 @@
       return div.innerHTML;
     }
 
+    function sanitizeUrl(url) {
+      if (!url) return '#';
+      try {
+        const parsed = new URL(url);
+        if (parsed.protocol === 'https:' || parsed.protocol === 'http:') return url;
+        return '#';
+      } catch {
+        return '#';
+      }
+    }
+
     // ─── Auto-resize textarea ───────────────────────────────
     inputField.addEventListener('input', () => {
       inputField.style.height = 'auto';
@@ -1722,7 +1733,7 @@
             <div class="landscape-grid">
               ${r.existing_landscape.map(l => `
                 <div class="landscape-item">
-                  <h4>${l.url ? `<a href="${escapeHtml(l.url)}" target="_blank" rel="noopener">${escapeHtml(l.name)}</a>` : escapeHtml(l.name)}</h4>
+                  <h4>${l.url ? `<a href="${sanitizeUrl(l.url)}" target="_blank" rel="noopener">${escapeHtml(l.name)}</a>` : escapeHtml(l.name)}</h4>
                   <p class="landscape-does">${escapeHtml(l.what_they_do)}</p>
                   <p class="landscape-gap"><strong>The gap:</strong> ${escapeHtml(l.gap)}</p>
                 </div>
@@ -1801,7 +1812,7 @@
             <h3><span class="icon">&#x1F9F0;</span> Tools & Resources</h3>
             <div class="tools-grid">
               ${r.tools.map(t => `
-                <a class="tool-card" href="${escapeHtml(t.url || '#')}" target="_blank" rel="noopener">
+                <a class="tool-card" href="${sanitizeUrl(t.url)}" target="_blank" rel="noopener">
                   <div class="tool-icon">${catIcons[t.category] || '&#x1F517;'}</div>
                   <div class="tool-info">
                     <h4>${escapeHtml(t.name)}</h4>

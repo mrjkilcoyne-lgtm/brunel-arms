@@ -5,8 +5,9 @@
  * Configure API_BASE_URL for your deployment.
  */
 
-// Change this to your deployed backend URL
-const API_BASE_URL = 'http://10.0.2.2:3000'; // Android emulator -> host machine
+// Configure via environment or change for deployment.
+// Default: Android emulator -> host machine. For iOS simulator use http://localhost:3000
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.2.2:3000';
 
 export interface Message {
   role: 'user' | 'assistant';
